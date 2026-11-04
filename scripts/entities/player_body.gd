@@ -8,7 +8,7 @@
 ## exports win over auto-resolution: if you drag a component or node into an
 ## inspector slot, that reference is used. otherwise the body finds the child by
 ## type. [MovementProfile] is a [Resource], not a [Node], so it can't be found in
-## the tree — it defaults to a fresh instance if no profile is exported.
+## the tree, defaults to a fresh instance if no profile is exported.
 class_name PlayerBody
 extends CharacterBody3D
 
