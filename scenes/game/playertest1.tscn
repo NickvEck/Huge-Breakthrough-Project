@@ -953,6 +953,10 @@ metadata/_custom_type_script = "uid://crtc4634n2epu"
 script = ExtResource("6_uyr7x")
 metadata/_custom_type_script = "uid://b0bul4sdikiw3"
 
+[node name="SanityComponent" type="Node" parent="." unique_id=1591365796]
+script = ExtResource("26_0lqjd")
+metadata/_custom_type_script = "uid://dujfd7ts273sj"
+
 [node name="StateChart" type="Node" parent="." unique_id=1642631168]
 unique_name_in_owner = true
 script = ExtResource("5_2dwxl")
@@ -1107,7 +1111,3 @@ to = NodePath("../Launch")
 event = &"launch"
 delay_in_seconds = "0.0"
 metadata/_custom_type_script = "uid://cf1nsco3w0mf6"
-
-[node name="SanityComponent" type="Node" parent="." unique_id=1591365796]
-script = ExtResource("26_0lqjd")
-metadata/_custom_type_script = "uid://dujfd7ts273sj"
