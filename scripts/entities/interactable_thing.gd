@@ -1,17 +1,26 @@
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
-
 # interactable_thing.gd
+## anything the player can interact with: a tree, a box, a person.
+## [method run] shows [member dialogue] (if any) and returns when it ends, so the
+## caller can hold the interact lock for the whole interaction.
 class_name InteractableThing
 extends Node3D
 
-signal interacted(by: Area3D)
-signal interaction_finished
+signal interacted(by: Node)
 
 @export var enabled: bool = true
 @export var animate_on_interact: bool = false
-@export var holds_interact_lock: bool = false
+## frees the node after the interaction ended (pickups).
+@export var free_after: bool = false
+## freezes player until interaction ends.
+@export var locks_player: bool = true
 @export var sprite: AnimatedSprite3D
+@export_group("Dialogue")
+@export var dialogue: DialogueResource
+@export var dialogue_cue: String = "start"
+
+var _running: bool = false
 
 
 func _ready() -> void:
@@ -24,13 +33,16 @@ func _ready() -> void:
 		sprite.pause()
 
 
-func trigger(by: Area3D) -> void:
-	if not enabled:
+func run(by: Node) -> void:
+	if not enabled or _running:
 		return
+	_running = true
 	if animate_on_interact and sprite:
 		sprite.play()
 	interacted.emit(by)
-
-
-func finish_interaction() -> void:
-	interaction_finished.emit()
+	if dialogue:
+		DialogueManager.show_dialogue_balloon(dialogue, dialogue_cue, [by])
+		await DialogueManager.dialogue_ended
+	_running = false
+	if free_after:
+		queue_free()

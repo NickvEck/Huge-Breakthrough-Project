@@ -1,0 +1,4 @@
+~ start
+You find ASPECT OF HATE
+do give_item("ASPECT OF HATE")
+=> END

@@ -1,8 +1,11 @@
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
-
 # interaction_component.gd
-## finds the closest [InteractableThing] in range and triggers it on interact press.
+## finds the closest [InteractableThing] in range and runs it on interact press.
+## if the thing has [member InteractableThing.locks_player], the lock lasts until
+## [method InteractableThing.run] returns. nothing new starts while one is running.
+## the lock is owned here, not by the state chart: movement and sanity listen to
+## [signal interact_started] / [signal interact_ended] and [member is_locked].
 ## dependencies (input, state_chart, interact_area, body) are injected by the body.
 class_name InteractionComponent
 extends Component
@@ -20,19 +23,14 @@ var body: Node3D
 
 var is_locked: bool = false
 
-@onready var interact_state: StateChartState = %Interact
+var _busy: bool = false
 
 
 func _physics_process(_delta: float) -> void:
-	if is_locked or not input_component or not body:
+	if is_locked or _busy or not input_component or not body:
 		return
 	if input_component.get_frame().interact_pressed:
 		_interact()
-
-
-func _on_ready() -> void:
-	interact_state.state_entered.connect(_on_entered)
-	interact_state.state_exited.connect(_on_exited)
 
 
 func _on_setup() -> void:
@@ -47,18 +45,26 @@ func _on_setup() -> void:
 		push_error("%s: missing required dependencies: %s" % [name, ", ".join(missing)])
 		set_physics_process(false)
 
+
 #region Interaction
 func _interact() -> void:
 	var target: InteractableThing = _find_closest()
 	if not target:
 		return
-	target.trigger(interact_area)
+	var locks: bool = target.locks_player
+	_busy = true
+	if locks:
+		_set_locked(true)
+		state_chart.send_event(StateEvents.INTERACT)
 	interacted.emit(target)
-	state_chart.send_event(StateEvents.INTERACT)
-	if target.holds_interact_lock:
-		target.interaction_finished.connect(_end_interact, CONNECT_ONE_SHOT)
-	else:
-		_end_interact()
+	await target.run(body)
+	# wait phusics frame or two, wait out so it doesn't start the interaction again and i get stuck i gojos infinity domain
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	if locks:
+		state_chart.send_event(StateEvents.INTERACT_END)
+		_set_locked(false)
+	_busy = false
 
 
 func _find_closest() -> InteractableThing:
@@ -74,19 +80,14 @@ func _find_closest() -> InteractableThing:
 			closest_dist_sq = dist_sq
 			closest = candidate
 	return closest
-
-
-func _end_interact() -> void:
-	state_chart.send_event(StateEvents.INTERACT_END)
 #endregion
 
+
 #region Lock
-func _on_entered() -> void:
-	is_locked = true
-	interact_started.emit()
-
-
-func _on_exited() -> void:
-	is_locked = false
-	interact_ended.emit()
+func _set_locked(value: bool) -> void:
+	is_locked = value
+	if value:
+		interact_started.emit()
+	else:
+		interact_ended.emit()
 #endregion

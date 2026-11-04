@@ -28,6 +28,8 @@ extends CharacterBody3D
 @export var interact_area: Area3D
 @export var state_chart: StateChart
 
+var items: Dictionary[String, int] = { }
+
 
 func _enter_tree() -> void:
 	_wire_components()
@@ -81,3 +83,23 @@ func _wire_components() -> void:
 
 func _find_child_of_type(type: Variant) -> Node:
 	return Component.find_component(self, type, false)
+
+
+#region Dialogue API
+## called from .dialogue (dialogue manager PLUGIN)
+func give_item(id: String, count: int = 1) -> void:
+	items[id] = items.get(id, 0) + count
+
+
+func remove_item(id: String, count: int = 1) -> void:
+	items[id] = maxi(items.get(id, 0) - count, 0)
+
+
+func has_item(id: String) -> bool:
+	return items.get(id, 0) > 0
+
+
+func sanity_add(amount: float) -> void:
+	if sanity:
+		sanity.add(amount)
+#endregion

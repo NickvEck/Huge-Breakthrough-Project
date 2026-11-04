@@ -9,6 +9,10 @@
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="8_q87u7"]
 [ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="9_k8llc"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="10_fj4qb"]
+[ext_resource type="Script" uid="uid://dq5r7n4mxqqoa" path="res://scripts/entities/interactable_thing.gd" id="10_o8eqq"]
+[ext_resource type="Texture2D" uid="uid://cgdoexuttam65" path="res://The Amazing Art and Sound Folder/archive/cassie_red1.png" id="11_717p3"]
+[ext_resource type="Resource" uid="uid://cetgg5fl75fb4" path="res://The Amazing Art and Sound Folder/test1.dialogue" id="11_o8eqq"]
+[ext_resource type="Texture2D" uid="uid://6yeroqsmvbna" path="res://The Amazing Art and Sound Folder/archive/cassie_red2.png" id="12_40aua"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qaipj"]
 
@@ -27,6 +31,20 @@ size = Vector3(32, 8, 16)
 
 [sub_resource type="Resource" id="Resource_tqokf"]
 script = ExtResource("10_fj4qb")
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_q1sf4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_717p3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_40aua")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 2.0
+}]
 
 [node name="2_5D test Dean" type="Node3D" unique_id=808041491]
 script = ExtResource("1_45hsw")
@@ -173,6 +191,17 @@ spring_length = 3.0
 align_transform_with_view = Callable()
 align_position_with_view = Callable()
 align_rotation_with_view = Callable()
+
+[node name="InteractableThing" type="Node3D" parent="." unique_id=1601618768]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.038578, 2.8417342, 0)
+script = ExtResource("10_o8eqq")
+dialogue = ExtResource("11_o8eqq")
+metadata/_custom_type_script = "uid://dq5r7n4mxqqoa"
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="InteractableThing" unique_id=63616522]
+pixel_size = 0.1
+sprite_frames = SubResource("SpriteFrames_q1sf4")
+autoplay = "default"
 
 [connection signal="pressed" from="CanvasLayer/MarginContainer/VBoxContainer/HBoxContainer2/TutorialButton" to="." method="_on_tutorial_button_pressed"]
 [connection signal="body_entered" from="World/WinArea3D" to="." method="_on_win_area_3d_body_entered"]
