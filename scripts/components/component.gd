@@ -11,7 +11,7 @@
 ##
 ## components declare dependencies as plain typed fields (not [code]@export[/code]).
 ## the body holds [code]@export[/code] references and assigns them once, see
-## [PlayerBody] for the concrete wiring.
+## [PlayerBody] for the concrete wiring. check them in [method _on_setup] with [method _require].
 ##
 ## [method _on_ready] and [method _on_setup] are NOT chained: subclasses extending
 ## [Component] directly must not call [code]super()[/code] in those overrides.
@@ -42,3 +42,15 @@ func _on_ready() -> void:
 
 func _on_setup() -> void:
 	pass
+
+
+## pushes one error naming every null dependency ({ "label": value }).
+## returns true if all are set, so the caller can bail out.
+func _require(deps: Dictionary) -> bool:
+	var missing: PackedStringArray = PackedStringArray()
+	for dep_name: String in deps:
+		if not deps[dep_name]:
+			missing.append(dep_name)
+	if not missing.is_empty():
+		push_error("%s: missing required dependencies: %s" % [name, ", ".join(missing)])
+	return missing.is_empty()

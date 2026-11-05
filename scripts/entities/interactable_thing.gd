@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
-# interactable_thing.gd
 ## anything the player can interact with: a tree, a box, a person.
 ## [method run] gives [member item] (if any), shows [member dialogue] (if any) and
 ## returns when it ends, so the caller can hold the interact lock for the whole interaction.
@@ -10,7 +9,9 @@ extends Node3D
 
 ## [param reason] is [code]&"requires"[/code] or [code]&"full"[/code].
 signal blocked(by: Node, reason: StringName)
-signal interacted(by: Node)
+
+## group every thing joins, [InteractionComponent] scans it.
+const GROUP: StringName = &"interactable"
 
 @export var enabled: bool = true
 @export var animate_on_interact: bool = false
@@ -40,10 +41,14 @@ var _running: bool = false
 
 
 func _ready() -> void:
+	if auto and dialogue:
+		push_error("%s: auto things must not have a dialogue" % name)
+	if persistent_id != "" and not free_after:
+		push_warning("%s: persistent_id does nothing without free_after" % name)
 	if free_after and persistent_id != "" and GameState.get_level_flag(_level_path(), _done_key()):
 		queue_free()
 		return
-	add_to_group(&"interactable")
+	add_to_group(GROUP)
 	if not animate_on_interact:
 		return
 	if not sprite:
@@ -56,16 +61,18 @@ func run(by: Node) -> void:
 	if not enabled or _running:
 		return
 	var player := by as PlayerBody
-	if requires_item and player and player.inventory and not player.inventory.has(requires_item):
+	if (item or requires_item) and not (player and player.inventory):
+		push_error("%s: item/requires_item set but %s has no inventory" % [name, by.name])
+		return
+	if requires_item and not player.inventory.has(requires_item):
 		await _block(by, &"requires")
 		return
-	if item and player and player.inventory and not player.inventory.add(item, item_count):
+	if item and not player.inventory.add(item, item_count):
 		await _block(by, &"full")
 		return
 	_running = true
 	if animate_on_interact and sprite:
 		sprite.play()
-	interacted.emit(by)
 	if dialogue:
 		DialogueManager.show_dialogue_balloon(dialogue, dialogue_cue, [by])
 		await DialogueManager.dialogue_ended

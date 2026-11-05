@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
-# interaction_component.gd
 ## finds the closest [InteractableThing] in range and runs it on interact press.
 ## things with [member InteractableThing.auto] run once when the player walks into their
 ## radius (again after leaving and re-entering), without locking.
@@ -8,11 +7,10 @@
 ## [method InteractableThing.run] returns. nothing new starts while one is running.
 ## the lock is owned here, not by the state chart: movement and sanity listen to
 ## [signal interact_started] / [signal interact_ended] and [member is_locked].
-## dependencies (input, state_chart, interact_area, body) are injected by the body.
+## dependencies (input_component, state_chart, body) are injected by the body.
 class_name InteractionComponent
 extends Component
 
-signal interacted(target: InteractableThing)
 signal interact_started
 signal interact_ended
 
@@ -20,7 +18,6 @@ signal interact_ended
 
 var input_component: InputComponent
 var state_chart: StateChart
-var interact_area: Area3D
 var body: Node3D
 
 var is_locked: bool = false
@@ -31,7 +28,7 @@ var _auto_inside: Array[int] = []
 
 
 func _physics_process(_delta: float) -> void:
-	if is_locked or not input_component or not body:
+	if is_locked:
 		return
 	_check_auto()
 	if _busy:
@@ -41,15 +38,8 @@ func _physics_process(_delta: float) -> void:
 
 
 func _on_setup() -> void:
-	var missing: PackedStringArray = PackedStringArray()
-	if not body:
-		missing.append("body")
-	if not input_component:
-		missing.append("input_component")
-	if not state_chart:
-		missing.append("state_chart")
-	if not missing.is_empty():
-		push_error("%s: missing required dependencies: %s" % [name, ", ".join(missing)])
+	var deps := { "body": body, "input_component": input_component, "state_chart": state_chart }
+	if not _require(deps):
 		set_physics_process(false)
 
 
@@ -63,7 +53,6 @@ func _interact() -> void:
 	if locks:
 		_set_locked(true)
 		state_chart.send_event(StateEvents.INTERACT)
-	interacted.emit(target)
 	await target.run(body)
 	# the press that closed the dialogue still counts as "just pressed" for a physics
 	# frame or two, wait it out so it doesn't start the interaction again.
@@ -79,7 +68,7 @@ func _find_closest() -> InteractableThing:
 	var closest: InteractableThing = null
 	var closest_dist_sq: float = interact_radius * interact_radius
 	var origin: Vector3 = body.global_position
-	for node: Node in get_tree().get_nodes_in_group(&"interactable"):
+	for node: Node in get_tree().get_nodes_in_group(InteractableThing.GROUP):
 		var candidate := node as InteractableThing
 		if not candidate or not candidate.enabled or candidate.auto:
 			continue
@@ -92,7 +81,7 @@ func _find_closest() -> InteractableThing:
 
 func _check_auto() -> void:
 	var origin: Vector3 = body.global_position
-	for node: Node in get_tree().get_nodes_in_group(&"interactable"):
+	for node: Node in get_tree().get_nodes_in_group(InteractableThing.GROUP):
 		var thing := node as InteractableThing
 		if not thing or not thing.enabled or not thing.auto:
 			continue
@@ -100,7 +89,6 @@ func _check_auto() -> void:
 		var inside: bool = origin.distance_squared_to(thing.global_position) <= thing.auto_radius * thing.auto_radius
 		if inside and not _auto_inside.has(id):
 			_auto_inside.append(id)
-			interacted.emit(thing)
 			thing.run(body)
 		elif not inside:
 			_auto_inside.erase(id)

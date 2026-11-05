@@ -1,10 +1,9 @@
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
-# sanity_component.gd
 ## the sanity meter. changes through [method add] or a flat [member drain_per_second].
 ## emits [signal changed] on every change, [signal zone_changed] when the ratio crosses
 ## one of [member thresholds] (up or down) and [signal depleted] when it hits 0.
-## drain pauses during interaction (injected by the body) or while [member drain_paused] is set.
+## drain pauses during interaction (injected by the body).
 class_name SanityComponent
 extends Component
 
@@ -20,14 +19,12 @@ signal depleted
 
 var interact_component: InteractionComponent
 
-## set by anything that should freeze the drain (dialogue, cutscenes, etc).
-var drain_paused: bool = false
 var value: float
 var zone: int = 0
 
 
 func _physics_process(delta: float) -> void:
-	if drain_per_second <= 0.0 or drain_paused:
+	if drain_per_second <= 0.0:
 		return
 	if interact_component and interact_component.is_locked:
 		return

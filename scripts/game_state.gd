@@ -14,6 +14,8 @@ const FILE_PATH = "res://scripts/game_state.gd"
 @export var total_time: int
 
 
+## the saved [LevelState] for a level scene path or uid.
+## a level seen for the first time gets a state created and saved here, so a read can write.
 static func get_level_state(level_state_key: String) -> LevelState:
 	level_state_key = ResourceUID.ensure_path(level_state_key)
 	if not has_game_state():
@@ -94,11 +96,14 @@ static func reset() -> void:
 	GlobalState.save()
 
 
+## true if [param flag] was set in that level. unknown level or flag = false.
+## used for "this pickup is already taken" style persistence, see [member InteractableThing.persistent_id].
 static func get_level_flag(level_path: String, flag: String) -> bool:
 	var level_state := get_level_state(level_path)
 	return level_state != null and level_state.flags.get(flag, false)
 
 
+## saves immediately. warns and saves nothing if the level has no state.
 static func set_level_flag(level_path: String, flag: String, value: bool = true) -> void:
 	var level_state := get_level_state(level_path)
 	if not level_state:

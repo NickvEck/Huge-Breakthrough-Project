@@ -12,8 +12,6 @@
 class_name PlatformerMovementBase
 extends Component
 
-signal moved(direction: Vector2)
-signal stopped
 signal ground_motion_changed(motion: StringName)
 signal jumped(jump_count: int)
 signal wall_jumped
@@ -35,7 +33,6 @@ var state_chart: StateChart
 var _empty_frame: InputFrame = InputFrame.new()
 var _transition_sent: bool = false
 var _grounded_before_move: bool = false
-var _was_moving: bool = false
 var _locked: bool = false
 var _disabled: bool = false
 var _last_land_frame: int = -1
@@ -136,17 +133,8 @@ func _on_ready() -> void:
 
 
 func _on_setup() -> void:
-	var missing: PackedStringArray = PackedStringArray()
-	if not profile:
-		missing.append("profile")
-	if not input_component:
-		missing.append("input_component")
-	if not facing_component:
-		missing.append("facing_component")
-	if not state_chart:
-		missing.append("state_chart")
-	if not missing.is_empty():
-		push_error("%s: missing required dependencies: %s" % [name, ", ".join(missing)])
+	var deps := { "profile": profile, "input_component": input_component, "facing_component": facing_component, "state_chart": state_chart }
+	if not _require(deps):
 		_disabled = true
 		set_physics_process(false)
 		if state_chart:
@@ -204,11 +192,7 @@ func _apply_horizontal(delta: float, input_dir: Vector2, is_running: bool, speed
 	var velocity_xz: Vector2 = _get_horizontal_velocity()
 
 	if input_dir.is_zero_approx():
-		velocity_xz = velocity_xz.move_toward(Vector2.ZERO, profile.move_friction * delta)
-		_set_horizontal_velocity(velocity_xz)
-		if _was_moving and velocity_xz.is_zero_approx():
-			stopped.emit()
-			_was_moving = false
+		_set_horizontal_velocity(velocity_xz.move_toward(Vector2.ZERO, profile.move_friction * delta))
 		return
 
 	var direction: Vector2 = _to_world(input_dir)
@@ -216,11 +200,7 @@ func _apply_horizontal(delta: float, input_dir: Vector2, is_running: bool, speed
 	var accel_rate: float = profile.turn_acceleration if turning else profile.move_acceleration
 	var target_speed: float = (profile.run_speed if is_running else profile.move_speed) * speed_multiplier
 	_set_horizontal_velocity(velocity_xz.move_toward(direction * target_speed, accel_rate * delta))
-
-	var changed: bool = facing_component.update(input_dir)
-	if not _was_moving or changed:
-		moved.emit(facing_component.facing)
-	_was_moving = true
+	facing_component.update(input_dir)
 
 
 func _update_current_motion(on_ground: bool, input_dir: Vector2, is_running: bool) -> void:

@@ -26,7 +26,6 @@ extends CharacterBody3D
 @export_group("Scene Nodes")
 @export var sprite: AnimatedSprite3D
 @export var collision_shape: CollisionShape3D
-@export var interact_area: Area3D
 @export var state_chart: StateChart
 
 
@@ -35,37 +34,25 @@ func _enter_tree() -> void:
 
 
 func _wire_components() -> void:
-	if not input:
-		input = _find_child_of_type(InputComponent)
-	if not facing:
-		facing = _find_child_of_type(FacingComponent)
-	if not movement:
-		movement = _find_child_of_type(PlatformerMovementBase) as Movement3DComponent
-	if not interaction:
-		interaction = _find_child_of_type(InteractionComponent)
-	if not animation:
-		animation = _find_child_of_type(AnimationComponent)
-	if not sanity:
-		sanity = _find_child_of_type(SanityComponent)
-	if sanity:
-		sanity.interact_component = interaction
-	if not inventory:
-		inventory = _find_child_of_type(InventoryComponent)
-	if inventory:
-		inventory.sanity = sanity
-		inventory.body = self
-	if not sprite:
-		sprite = _find_child_of_type(AnimatedSprite3D)
-	if not collision_shape:
-		collision_shape = _find_child_of_type(CollisionShape3D)
-	if not interact_area:
-		interact_area = _find_child_of_type(Area3D)
-	if not state_chart:
-		state_chart = _find_child_of_type(StateChart)
+	input = _pick(input, InputComponent)
+	facing = _pick(facing, FacingComponent)
+	movement = _pick(movement, Movement3DComponent)
+	interaction = _pick(interaction, InteractionComponent)
+	animation = _pick(animation, AnimationComponent)
+	sanity = _pick(sanity, SanityComponent)
+	inventory = _pick(inventory, InventoryComponent)
+	sprite = _pick(sprite, AnimatedSprite3D)
+	collision_shape = _pick(collision_shape, CollisionShape3D)
+	state_chart = _pick(state_chart, StateChart)
 
 	if not movement_profile:
 		movement_profile = MovementProfile.new()
 
+	if sanity:
+		sanity.interact_component = interaction
+	if inventory:
+		inventory.sanity = sanity
+		inventory.body = self
 	if movement:
 		movement.body = self
 		movement.profile = movement_profile
@@ -78,15 +65,15 @@ func _wire_components() -> void:
 		interaction.body = self
 		interaction.input_component = input
 		interaction.state_chart = state_chart
-		interaction.interact_area = interact_area
 	if animation:
 		animation.sprite = sprite
 		animation.movement = movement
 		animation.facing = facing
 
 
-func _find_child_of_type(type: Variant) -> Node:
-	return Component.find_component(self, type, false)
+## exports win, otherwise the first child of [param type].
+func _pick(current: Node, type: Variant) -> Node:
+	return current if current else Component.find_component(self, type)
 
 
 #region Dialogue API
