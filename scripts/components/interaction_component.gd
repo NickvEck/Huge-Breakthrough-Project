@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: EUPL-1.2
 # interaction_component.gd
 ## finds the closest [InteractableThing] in range and runs it on interact press.
+## things with [member InteractableThing.auto] run once when the player walks into their
+## radius (again after leaving and re-entering), without locking.
 ## if the thing has [member InteractableThing.locks_player], the lock lasts until
 ## [method InteractableThing.run] returns. nothing new starts while one is running.
 ## the lock is owned here, not by the state chart: movement and sanity listen to
@@ -24,10 +26,15 @@ var body: Node3D
 var is_locked: bool = false
 
 var _busy: bool = false
+## instance ids of auto things the player is currently standing in.
+var _auto_inside: Array[int] = []
 
 
 func _physics_process(_delta: float) -> void:
-	if is_locked or _busy or not input_component or not body:
+	if is_locked or not input_component or not body:
+		return
+	_check_auto()
+	if _busy:
 		return
 	if input_component.get_frame().interact_pressed:
 		_interact()
@@ -58,7 +65,8 @@ func _interact() -> void:
 		state_chart.send_event(StateEvents.INTERACT)
 	interacted.emit(target)
 	await target.run(body)
-	# wait phusics frame or two, wait out so it doesn't start the interaction again and i get stuck i gojos infinity domain
+	# the press that closed the dialogue still counts as "just pressed" for a physics
+	# frame or two, wait it out so it doesn't start the interaction again.
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	if locks:
@@ -73,13 +81,29 @@ func _find_closest() -> InteractableThing:
 	var origin: Vector3 = body.global_position
 	for node: Node in get_tree().get_nodes_in_group(&"interactable"):
 		var candidate := node as InteractableThing
-		if not candidate or not candidate.enabled:
+		if not candidate or not candidate.enabled or candidate.auto:
 			continue
 		var dist_sq: float = origin.distance_squared_to(candidate.global_position)
 		if dist_sq <= closest_dist_sq:
 			closest_dist_sq = dist_sq
 			closest = candidate
 	return closest
+
+
+func _check_auto() -> void:
+	var origin: Vector3 = body.global_position
+	for node: Node in get_tree().get_nodes_in_group(&"interactable"):
+		var thing := node as InteractableThing
+		if not thing or not thing.enabled or not thing.auto:
+			continue
+		var id: int = thing.get_instance_id()
+		var inside: bool = origin.distance_squared_to(thing.global_position) <= thing.auto_radius * thing.auto_radius
+		if inside and not _auto_inside.has(id):
+			_auto_inside.append(id)
+			interacted.emit(thing)
+			thing.run(body)
+		elif not inside:
+			_auto_inside.erase(id)
 #endregion
 
 

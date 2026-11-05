@@ -9,10 +9,17 @@ extends Resource
 const DIR: String = "res://scenes/items/"
 
 @export var display_name: String = ""
+@export_multiline var description: String = ""
+## free-form extras (lore, tags, anything). nothing reads it yet.
+@export var metadata: Dictionary = { }
 ## 1 = does not stack.
 @export_range(1, 99, 1) var max_stack: int = 1
 @export var consumed_on_use: bool = true
 @export var sanity_restore: float = 0.0
+@export_group("Use")
+## shown when the item is used outside a dialogue (not nested inside one).
+@export var use_dialogue: DialogueResource
+@export var use_dialogue_cue: String = "start"
 
 
 static func load_id(id: String) -> ItemData:

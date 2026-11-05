@@ -53,6 +53,7 @@ func _wire_components() -> void:
 		inventory = _find_child_of_type(InventoryComponent)
 	if inventory:
 		inventory.sanity = sanity
+		inventory.body = self
 	if not sprite:
 		sprite = _find_child_of_type(AnimatedSprite3D)
 	if not collision_shape:

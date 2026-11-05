@@ -92,3 +92,17 @@ static func reset() -> void:
 	game_state.play_time = 0
 	game_state.total_time = 0
 	GlobalState.save()
+
+
+static func get_level_flag(level_path: String, flag: String) -> bool:
+	var level_state := get_level_state(level_path)
+	return level_state != null and level_state.flags.get(flag, false)
+
+
+static func set_level_flag(level_path: String, flag: String, value: bool = true) -> void:
+	var level_state := get_level_state(level_path)
+	if not level_state:
+		push_warning("no level state for '%s', flag '%s' not saved" % [level_path, flag])
+		return
+	level_state.flags[flag] = value
+	GlobalState.save()
