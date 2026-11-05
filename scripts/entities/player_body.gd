@@ -19,6 +19,7 @@ extends CharacterBody3D
 @export var interaction: InteractionComponent
 @export var animation: AnimationComponent
 @export var sanity: SanityComponent
+@export var inventory: InventoryComponent
 @export_group("Data")
 @export var movement_profile: MovementProfile
 
@@ -27,8 +28,6 @@ extends CharacterBody3D
 @export var collision_shape: CollisionShape3D
 @export var interact_area: Area3D
 @export var state_chart: StateChart
-
-var items: Dictionary[String, int] = { }
 
 
 func _enter_tree() -> void:
@@ -50,6 +49,10 @@ func _wire_components() -> void:
 		sanity = _find_child_of_type(SanityComponent)
 	if sanity:
 		sanity.interact_component = interaction
+	if not inventory:
+		inventory = _find_child_of_type(InventoryComponent)
+	if inventory:
+		inventory.sanity = sanity
 	if not sprite:
 		sprite = _find_child_of_type(AnimatedSprite3D)
 	if not collision_shape:
@@ -86,17 +89,22 @@ func _find_child_of_type(type: Variant) -> Node:
 
 
 #region Dialogue API
-## called from .dialogue (dialogue manager PLUGIN)
-func give_item(id: String, count: int = 1) -> void:
-	items[id] = items.get(id, 0) + count
+## called from .dialogue files, the body is passed in as extra game state.
+## items are ids, see [method ItemData.load_id]. needs an [InventoryComponent].
+func give_item(id: String, count: int = 1) -> bool:
+	return inventory.add(ItemData.load_id(id), count)
 
 
-func remove_item(id: String, count: int = 1) -> void:
-	items[id] = maxi(items.get(id, 0) - count, 0)
+func remove_item(id: String, count: int = 1) -> bool:
+	return inventory.remove(ItemData.load_id(id), count)
 
 
-func has_item(id: String) -> bool:
-	return items.get(id, 0) > 0
+func has_item(id: String, count: int = 1) -> bool:
+	return inventory.has(ItemData.load_id(id), count)
+
+
+func use_item(id: String) -> bool:
+	return inventory.use(ItemData.load_id(id))
 
 
 func sanity_add(amount: float) -> void:

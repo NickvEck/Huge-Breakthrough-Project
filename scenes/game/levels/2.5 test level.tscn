@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="9_k8llc"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="10_fj4qb"]
 [ext_resource type="Script" uid="uid://dq5r7n4mxqqoa" path="res://scripts/entities/interactable_thing.gd" id="10_o8eqq"]
+[ext_resource type="Resource" uid="uid://ds0jpb0tn23s0" path="res://scenes/items/ASPECT OF HATE.tres" id="11_40aua"]
 [ext_resource type="Texture2D" uid="uid://cgdoexuttam65" path="res://The Amazing Art and Sound Folder/archive/cassie_red1.png" id="11_717p3"]
 [ext_resource type="Resource" uid="uid://cetgg5fl75fb4" path="res://The Amazing Art and Sound Folder/test1.dialogue" id="11_o8eqq"]
 [ext_resource type="Texture2D" uid="uid://6yeroqsmvbna" path="res://The Amazing Art and Sound Folder/archive/cassie_red2.png" id="12_40aua"]
@@ -192,10 +193,13 @@ align_transform_with_view = Callable()
 align_position_with_view = Callable()
 align_rotation_with_view = Callable()
 
-[node name="InteractableThing" type="Node3D" parent="." unique_id=1601618768]
+[node name="InteractableThing" type="Node3D" parent="." unique_id=1601618768 node_paths=PackedStringArray("sprite")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.038578, 2.8417342, 0)
 script = ExtResource("10_o8eqq")
+sprite = NodePath("AnimatedSprite3D")
+item = ExtResource("11_40aua")
 dialogue = ExtResource("11_o8eqq")
+dialogue_cue = null
 metadata/_custom_type_script = "uid://dq5r7n4mxqqoa"
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="InteractableThing" unique_id=63616522]
