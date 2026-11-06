@@ -1,5 +1,8 @@
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
+## Sprite animation names, must match the animations in the player's sprite frames.
+## Ground motions from [Motions] are played by name, so those values must match too.
+## [constant FALL] is the landing animation, [constant FALLING] is the air loop.
 class_name Animations
 extends RefCounted
 

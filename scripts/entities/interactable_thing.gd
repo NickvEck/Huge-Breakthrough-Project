@@ -1,40 +1,43 @@
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
-## anything the player can interact with: a tree, a box, a person.
+## Anything the player can interact with: a tree, a box, a person.
 ## [method run] gives [member item] (if any), shows [member dialogue] (if any) and
 ## returns when it ends, so the caller can hold the interact lock for the whole interaction.
-## blocked (missing [member requires_item] or no room) = nothing is given and the thing stays.
+## When blocked (missing [member requires_item] or no room) nothing is given and the thing stays.
 class_name InteractableThing
 extends Node3D
 
-## [param reason] is [code]&"requires"[/code] or [code]&"full"[/code].
+## Emitted when blocked. [param reason] is [code]&"requires"[/code] or [code]&"full"[/code].
 signal blocked(by: Node, reason: StringName)
 
-## group every thing joins, [InteractionComponent] scans it.
+## Group every thing joins. [InteractionComponent] scans it.
 const GROUP: StringName = &"interactable"
 
 @export var enabled: bool = true
+## Plays [member sprite] on interact, paused otherwise.
 @export var animate_on_interact: bool = false
-## frees the node after the interaction ended (pickups).
+## Frees the node after the interaction ended (pickups).
 @export var free_after: bool = false
-## freezes the player until the interaction ended. off = player can keep moving (signs, barks).
+## Freezes the player until the interaction ended. Off = player keeps moving (signs, barks).
 @export var locks_player: bool = true
-## with [member free_after]: once freed it stays gone (saved per level in [LevelState]).
-## must be unique within the level.
+## With [member free_after]: once freed it stays gone, saved per level in [LevelState].
+## Must be unique within the level.
 @export var persistent_id: String = ""
+## Defaults to the first [AnimatedSprite3D] child when [member animate_on_interact] is set.
 @export var sprite: AnimatedSprite3D
 @export_group("Pickup")
 @export var item: ItemData
 @export var item_count: int = 1
-## not given until the player carries this (it is not taken away).
+## Nothing is given until the player carries this. It is not taken away.
 @export var requires_item: ItemData
-## walk over it instead of pressing interact. never locks, so give it no dialogue.
+## Runs when the player walks into [member auto_radius] instead of on interact press.
+## Never locks, so give it no dialogue.
 @export var auto: bool = false
 @export var auto_radius: float = 1.0
 @export_group("Dialogue")
 @export var dialogue: DialogueResource
 @export var dialogue_cue: String = "start"
-## cue shown when blocked (needs [member dialogue], ignored for [member auto]). empty = silent.
+## Cue shown when blocked. Needs [member dialogue], ignored for [member auto]. Empty = silent.
 @export var blocked_cue: String = ""
 
 var _running: bool = false
@@ -45,6 +48,7 @@ func _ready() -> void:
 		push_error("%s: auto things must not have a dialogue" % name)
 	if persistent_id != "" and not free_after:
 		push_warning("%s: persistent_id does nothing without free_after" % name)
+	# Already taken in an earlier visit. Gone before it joins the group.
 	if free_after and persistent_id != "" and GameState.get_level_flag(_level_path(), _done_key()):
 		queue_free()
 		return
@@ -57,6 +61,8 @@ func _ready() -> void:
 		sprite.pause()
 
 
+## Runs the interaction for [param by] and returns when it ends.
+## [param by] needs an [InventoryComponent] if [member item] or [member requires_item] is set.
 func run(by: Node) -> void:
 	if not enabled or _running:
 		return
@@ -98,6 +104,7 @@ func _done_key() -> String:
 	return "thing." + persistent_id
 
 
-## the level scene this thing was placed in (works in any scene, even without the level manager).
+# Scene path of the level this was placed in. Falls back to the current level
+# when there is no owner (added from code).
 func _level_path() -> String:
 	return owner.scene_file_path if owner else GameState.get_current_level_path()

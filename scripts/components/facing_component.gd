@@ -1,19 +1,21 @@
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
-## tracks which way the character faces as a [Vector2].
-## feed it with [method update] every frame.
-## [signal flipped] only fires on x, y is tracked but turning up/down isn't a "flip".
+## Tracks which way the character faces.
+## Feed it with [method update] every frame.
 class_name FacingComponent
 extends Component
 
+## Emitted when the horizontal facing changes. Vertical changes are not a flip.
 signal flipped(new_facing_x: float)
 
+## Initial horizontal facing.
 @export var default_facing_right: bool = true
 
+## Last non-zero direction per axis. x: -1 left, 1 right. y: -1 up, 1 down.
 var facing: Vector2
 
 
-## [param direction] is the raw input, a zero axis keeps the old facing on that axis.
+## [param direction] is the raw input. A zero axis keeps the old facing on that axis.
 func update(direction: Vector2) -> void:
 	if not is_zero_approx(direction.x):
 		var x: float = signf(direction.x)

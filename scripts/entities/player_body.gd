@@ -1,14 +1,13 @@
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
-## owns every component on the player [CharacterBody3D] and wires
-## their dependencies in [method Node._enter_tree]. this is the single wiring site
-## components never look up their siblings themselves. the body is the ancestor
-## that mediates every sibling relationship.
+## Owns every component on the player [CharacterBody3D] and wires their dependencies
+## in [method Node._enter_tree]. This is the only wiring site, components never look up
+## their siblings themselves.
 ##
-## exports win over auto-resolution: if you drag a component or node into an
-## inspector slot, that reference is used. otherwise the body finds the child by
-## type. [MovementProfile] is a [Resource], not a [Node], so it can't be found in
-## the tree, defaults to a fresh instance if no profile is exported.
+## Exports win over auto-resolution: a component or node dragged into an inspector slot
+## is used, otherwise the body finds the first child of that type.
+## [MovementProfile] is a [Resource] and cannot be found in the tree, so a fresh
+## instance is used when none is exported.
 class_name PlayerBody
 extends CharacterBody3D
 
@@ -71,14 +70,15 @@ func _wire_components() -> void:
 		animation.facing = facing
 
 
-## exports win, otherwise the first child of [param type].
+# The export if set, otherwise the first child of [param type].
 func _pick(current: Node, type: Variant) -> Node:
 	return current if current else Component.find_component(self, type)
 
 
 #region Dialogue API
-## called from .dialogue files, the body is passed in as extra game state.
-## items are ids, see [method ItemData.load_id]. needs an [InventoryComponent].
+# Called from .dialogue files, the body is passed in as extra game state.
+# Items are ids, see [method ItemData.load_id]. All of these need an [InventoryComponent].
+## Gives the item. Returns false if there is no room.
 func give_item(id: String, count: int = 1) -> bool:
 	return inventory.add(ItemData.load_id(id), count)
 
@@ -95,6 +95,7 @@ func use_item(id: String) -> bool:
 	return inventory.use(ItemData.load_id(id))
 
 
+## Does nothing without a [SanityComponent].
 func sanity_add(amount: float) -> void:
 	if sanity:
 		sanity.add(amount)

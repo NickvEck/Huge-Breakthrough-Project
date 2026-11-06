@@ -1,29 +1,33 @@
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
-## finds the closest [InteractableThing] in range and runs it on interact press.
-## things with [member InteractableThing.auto] run once when the player walks into their
-## radius (again after leaving and re-entering), without locking.
-## if the thing has [member InteractableThing.locks_player], the lock lasts until
-## [method InteractableThing.run] returns. nothing new starts while one is running.
-## the lock is owned here, not by the state chart: movement and sanity listen to
-## [signal interact_started] / [signal interact_ended] and [member is_locked].
-## dependencies (input_component, state_chart, body) are injected by the body.
+## Finds the closest [InteractableThing] in range and runs it on interact press.
+## Things with [member InteractableThing.auto] run once when the player walks into their
+## radius (again after leaving and re-entering) and never lock.
+## With [member InteractableThing.locks_player] the lock lasts until [method InteractableThing.run]
+## returns. Nothing new starts while one is running.
+## The lock lives here, not in the state chart. Movement and sanity listen to
+## [signal interact_started], [signal interact_ended] and [member is_locked].
+## Dependencies (input_component, state_chart, body) are injected by the body.
 class_name InteractionComponent
 extends Component
 
+## Emitted when a locking interaction starts.
 signal interact_started
+## Emitted when a locking interaction ends.
 signal interact_ended
 
+## Max distance to a thing for the interact press to pick it.
 @export var interact_radius: float = 2.0
 
 var input_component: InputComponent
 var state_chart: StateChart
 var body: Node3D
 
+## True during a locking interaction.
 var is_locked: bool = false
 
 var _busy: bool = false
-## instance ids of auto things the player is currently standing in.
+# Instance ids of auto things the player is currently standing in.
 var _auto_inside: Array[int] = []
 
 
@@ -54,8 +58,8 @@ func _interact() -> void:
 		_set_locked(true)
 		state_chart.send_event(StateEvents.INTERACT)
 	await target.run(body)
-	# the press that closed the dialogue still counts as "just pressed" for a physics
-	# frame or two, wait it out so it doesn't start the interaction again.
+	# The press that closed the dialogue still reads as just pressed for a physics
+	# frame or two. Wait it out so it does not restart the interaction.
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	if locks:
@@ -89,6 +93,7 @@ func _check_auto() -> void:
 		var inside: bool = origin.distance_squared_to(thing.global_position) <= thing.auto_radius * thing.auto_radius
 		if inside and not _auto_inside.has(id):
 			_auto_inside.append(id)
+			# Not awaited, auto things never lock.
 			thing.run(body)
 		elif not inside:
 			_auto_inside.erase(id)

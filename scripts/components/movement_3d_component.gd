@@ -1,9 +1,8 @@
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
-
-# movement_3d_component.gd
 ## [PlatformerMovementBase] for a [CharacterBody3D].
-## dependencies (body, collision_shape) are injected by the body.
+## Horizontal movement is the x/z plane, vertical is along [member CharacterBody3D.up_direction].
+## Dependencies (body, collision_shape) are injected by the body.
 class_name Movement3DComponent
 extends PlatformerMovementBase
 
@@ -27,6 +26,7 @@ func _read_move(frame: InputFrame) -> Vector2:
 	return frame.move
 
 
+# Input y maps to world z, rotated by the body's basis.
 func _to_world(direction: Vector2) -> Vector2:
 	var world: Vector3 = body.global_basis * Vector3(direction.x, 0.0, direction.y)
 	return Vector2(world.x, world.z)

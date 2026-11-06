@@ -1,10 +1,11 @@
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
-## picks the sprite animation from movement and facing signals.
-## dependencies (sprite, movement, facing) are injected by the body, all required.
+## Picks the sprite animation from [PlatformerMovementBase] and [FacingComponent] signals.
+## Dependencies (sprite, movement, facing) are injected by the body, all required.
 class_name AnimationComponent
 extends Component
 
+## Seconds for a full turn squash.
 @export_group("Flip")
 @export var flip_duration: float = 0.1
 
@@ -13,7 +14,9 @@ var movement: PlatformerMovementBase
 var facing: FacingComponent
 
 var _is_airborne: bool = false
+# Landing animation is playing. Ground motion changes are held back until it ends.
 var _is_landing: bool = false
+# Tumbling (airspin) must not be replaced by the falling loop.
 var _is_tumbling: bool = false
 var _pending_ground_motion: StringName = Motions.IDLE
 var _flip_tween: Tween
@@ -22,7 +25,7 @@ var _base_scale_x: float = 1.0
 
 func _on_ready() -> void:
 	if not sprite:
-		return # _on_setup reports the error
+		return # _on_setup reports the error.
 	_base_scale_x = sprite.scale.x
 	sprite.animation_finished.connect(_on_animation_finished)
 
@@ -43,7 +46,7 @@ func _on_setup() -> void:
 	sprite.flip_h = not facing.default_facing_right
 
 
-## every airborne animation sets the same two flags, tumbling blocks [signal started_falling].
+# Every airborne animation sets the same two flags.
 func _play_air(animation: StringName, tumbling: bool = false) -> void:
 	_is_airborne = true
 	_is_tumbling = tumbling
@@ -52,6 +55,7 @@ func _play_air(animation: StringName, tumbling: bool = false) -> void:
 
 func _on_ground_motion_changed(motion: StringName) -> void:
 	if _is_landing:
+		# Moving cuts the landing short, anything else waits for it to finish.
 		if motion == Motions.WALK or motion == Motions.RUN:
 			_is_landing = false
 			sprite.play(motion)
@@ -78,6 +82,7 @@ func _on_airspin() -> void:
 func _on_wall_slid() -> void:
 	_is_airborne = true
 	_is_tumbling = false
+	# Emitted every physics frame, restarting would freeze the animation.
 	if sprite.animation != Animations.WALL_SLIDE:
 		sprite.play(Animations.WALL_SLIDE)
 
@@ -116,6 +121,7 @@ func _on_flipped(new_facing_x: float) -> void:
 	var flip: bool = new_facing_x < 0.0
 	if _flip_tween:
 		_flip_tween.kill()
+	# Squash x to 0, swap the flip at the midpoint, expand back.
 	_flip_tween = create_tween()
 	_flip_tween.tween_property(sprite, "scale:x", 0.0, flip_duration * 0.5)
 	_flip_tween.tween_callback(

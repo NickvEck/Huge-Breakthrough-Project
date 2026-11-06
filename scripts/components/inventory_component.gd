@@ -1,25 +1,30 @@
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
-## the player's inventory, [ItemData] -> count. a stack of [member ItemData.max_stack]
+## The player's inventory, [ItemData] to count. A stack of [member ItemData.max_stack]
 ## takes one slot, [member max_slots] limits the slots used in total.
-## dependencies (body, optional sanity) are injected by the body.
+## Dependencies (body, optional sanity) are injected by the body.
 class_name InventoryComponent
 extends Component
 
+## Emitted after an item was added.
 signal item_added(item: ItemData, count: int)
+## Emitted when [method add] found no room.
 signal add_failed(item: ItemData)
 
 @export var max_slots: int = 8
-## prints what happens (testing only).
+## Prints inventory changes. Testing only.
 @export var debug: bool = true
 
 var sanity: SanityComponent
 var body: Node
+## Item to count. Read only, change it through [method add] and [method remove].
 var items: Dictionary[ItemData, int] = { }
 
+# Item use dialogues are skipped while another dialogue is open.
 var _in_dialogue: bool = false
 
 
+## True if at least [param count] of [param item] are carried.
 func has(item: ItemData, count: int = 1) -> bool:
 	return item != null and items.get(item, 0) >= count
 
@@ -31,13 +36,14 @@ func slots_used() -> int:
 	return used
 
 
+## True if [param count] more of [param item] fit in the free slots.
 func can_carry(item: ItemData, count: int = 1) -> bool:
 	var have: int = items.get(item, 0)
 	var extra: int = _slots_for(item, have + count) - _slots_for(item, have)
 	return slots_used() + extra <= max_slots
 
 
-## all or nothing. false = no room, nothing was added.
+## All or nothing. Returns false when there is no room and nothing was added.
 func add(item: ItemData, count: int = 1) -> bool:
 	if not item:
 		return false
@@ -51,6 +57,7 @@ func add(item: ItemData, count: int = 1) -> bool:
 	return true
 
 
+## Returns false when fewer than [param count] are carried and nothing was removed.
 func remove(item: ItemData, count: int = 1) -> bool:
 	if not has(item, count):
 		return false
@@ -61,7 +68,9 @@ func remove(item: ItemData, count: int = 1) -> bool:
 	return true
 
 
-## applies the item's effects. its use dialogue only shows when not already inside a dialogue.
+## Applies the item's effects and consumes it if [member ItemData.consumed_on_use].
+## Its use dialogue only shows when no dialogue is open.
+## Returns false if the item is not carried.
 func use(item: ItemData) -> bool:
 	if not has(item):
 		return false
@@ -95,6 +104,7 @@ func _log(message: String) -> void:
 		print("[inv] %s (slots %d/%d)" % [message, slots_used(), max_slots])
 
 
+# The id is the .tres file name, same as in .dialogue files.
 func _id(item: ItemData) -> String:
 	return item.resource_path.get_file().get_basename()
 

@@ -1,11 +1,13 @@
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
+## Saved game data, accessed through the static helpers.
 class_name GameState
 extends Resource
 
 const STATE_NAME: String = "GameState"
 const FILE_PATH = "res://scripts/game_state.gd"
 
+## Level scene path or uid to [LevelState].
 @export var level_states: Dictionary = { }
 @export var current_level_path: String
 @export var checkpoint_level_path: String
@@ -14,8 +16,8 @@ const FILE_PATH = "res://scripts/game_state.gd"
 @export var total_time: int
 
 
-## the saved [LevelState] for a level scene path or uid.
-## a level seen for the first time gets a state created and saved here, so a read can write.
+## Returns the saved [LevelState] for a level scene path or uid, or null without a game state.
+## A level seen for the first time gets a state created and saved, so a read can write.
 static func get_level_state(level_state_key: String) -> LevelState:
 	level_state_key = ResourceUID.ensure_path(level_state_key)
 	if not has_game_state():
@@ -86,6 +88,7 @@ static func continue_game() -> void:
 	GlobalState.save()
 
 
+## Wipes level progress and play time. [member total_games_played] is kept.
 static func reset() -> void:
 	var game_state := get_or_create_state()
 	game_state.level_states = { }
@@ -96,14 +99,14 @@ static func reset() -> void:
 	GlobalState.save()
 
 
-## true if [param flag] was set in that level. unknown level or flag = false.
-## used for "this pickup is already taken" style persistence, see [member InteractableThing.persistent_id].
+## True if [param flag] was set in that level. Unknown level or flag = false.
+## Used for "this pickup is already taken" persistence, see [member InteractableThing.persistent_id].
 static func get_level_flag(level_path: String, flag: String) -> bool:
 	var level_state := get_level_state(level_path)
 	return level_state != null and level_state.flags.get(flag, false)
 
 
-## saves immediately. warns and saves nothing if the level has no state.
+## Saves immediately. Warns and saves nothing if the level has no state.
 static func set_level_flag(level_path: String, flag: String, value: bool = true) -> void:
 	var level_state := get_level_state(level_path)
 	if not level_state:

@@ -1,8 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
-# player_input_component.gd
-## reads keyboard/mouse/controller into an [InputFrame].
-## also adds the parent to the "player" group.
+## Reads keyboard, mouse and controller into an [InputFrame].
+## Side effect: adds the parent to the "player" group.
 class_name PlayerInputComponent
 extends InputComponent
 
