@@ -1,4 +1,4 @@
 ~ start
 You find ASPECT OF HATE
-do give_item("ASPECT OF HATE")
+do give_item("aspect_of_hate")
 => END

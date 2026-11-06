@@ -1,7 +1,8 @@
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
 ## The sanity meter. Changes through [method add] or a flat [member drain_per_second].
-## Drain pauses during interaction (interact_component is injected by the body).
+## Drain pauses during interaction (interact_component is injected by the body)
+## and inside sanctuaries (see [method pause]).
 class_name SanityComponent
 extends Component
 
@@ -24,9 +25,16 @@ var value: float
 ## Number of [member thresholds] the ratio is at or above. 0 = lowest zone.
 var zone: int = 0
 
+## True while at least one caller has paused drain.
+var paused: bool:
+	get:
+		return _pause_count > 0
+
+var _pause_count: int = 0
+
 
 func _physics_process(delta: float) -> void:
-	if drain_per_second <= 0.0:
+	if _pause_count > 0 or drain_per_second <= 0.0:
 		return
 	if interact_component and interact_component.is_locked:
 		return
@@ -41,6 +49,16 @@ func get_ratio() -> float:
 ## Adds [param amount] (negative drains), clamped to 0 and [member max_sanity].
 func add(amount: float) -> void:
 	set_value(value + amount)
+
+
+## Pauses drain. Balance with [method unpause], safe to nest.
+func pause() -> void:
+	_pause_count += 1
+
+
+## Resumes drain once every caller has called [method unpause].
+func unpause() -> void:
+	_pause_count = maxi(0, _pause_count - 1)
 
 
 func set_value(new_value: float) -> void:

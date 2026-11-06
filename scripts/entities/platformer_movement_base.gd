@@ -288,9 +288,11 @@ func _land(reset_jumps: bool = false) -> void:
 	_was_falling = false
 	if reset_jumps:
 		_jumps_used = 0
+	# landed already carries the motion. Emitting ground_motion_changed here
+	# would replace the landing animation on the same frame, see
+	# AnimationComponent._on_ground_motion_changed.
 	landed.emit(_current_motion)
 	_send(StateEvents.LAND)
-	ground_motion_changed.emit(_current_motion)
 #endregion
 
 

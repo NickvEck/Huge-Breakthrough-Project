@@ -3,11 +3,13 @@
 ## Anything the player can interact with: a tree, a box, a person.
 ## [method run] gives [member item] (if any), shows [member dialogue] (if any) and
 ## returns when it ends, so the caller can hold the interact lock for the whole interaction.
-## When blocked (missing [member requires_item] or no room) nothing is given and the thing stays.
+## When blocked (missing [member requires_item], missing [member requires_flag] or
+## no room) nothing is given and the thing stays.
 class_name InteractableThing
 extends Node3D
 
-## Emitted when blocked. [param reason] is [code]&"requires"[/code] or [code]&"full"[/code].
+## Emitted when blocked. [param reason] is [code]&"requires"[/code],
+## [code]&"requires_flag"[/code] or [code]&"full"[/code].
 signal blocked(by: Node, reason: StringName)
 
 ## Group every thing joins. [InteractionComponent] scans it.
@@ -30,6 +32,9 @@ const GROUP: StringName = &"interactable"
 @export var item_count: int = 1
 ## Nothing is given until the player carries this. It is not taken away.
 @export var requires_item: ItemData
+## Nothing runs until this flag is set, see [method PlayerBody.set_flag].
+## Checked before [member requires_item].
+@export var requires_flag: String = ""
 ## Runs when the player walks into [member auto_radius] instead of on interact press.
 ## Never locks, so give it no dialogue.
 @export var auto: bool = false
@@ -69,6 +74,9 @@ func run(by: Node) -> void:
 	var player := by as PlayerBody
 	if (item or requires_item) and not (player and player.inventory):
 		push_error("%s: item/requires_item set but %s has no inventory" % [name, by.name])
+		return
+	if requires_flag != "" and not (player and player.get_flag(requires_flag)):
+		await _block(by, &"requires_flag")
 		return
 	if requires_item and not player.inventory.has(requires_item):
 		await _block(by, &"requires")

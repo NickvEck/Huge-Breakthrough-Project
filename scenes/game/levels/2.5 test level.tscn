@@ -199,7 +199,6 @@ script = ExtResource("10_o8eqq")
 sprite = NodePath("AnimatedSprite3D")
 item = ExtResource("11_40aua")
 dialogue = ExtResource("11_o8eqq")
-dialogue_cue = null
 metadata/_custom_type_script = "uid://dq5r7n4mxqqoa"
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="InteractableThing" unique_id=63616522]

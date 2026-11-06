@@ -100,3 +100,20 @@ func sanity_add(amount: float) -> void:
 	if sanity:
 		sanity.add(amount)
 #endregion
+
+
+#region Flags
+# Per-level flags for dialogue consequences and quest state. Keys are strings,
+# writers use a prefix: "quest.", "favor.", "sanctuary.". Called from .dialogue
+# files as set_flag("favor.bread") and if get_flag("favor.bread").
+# @warning: requires a game state, see [GameState]. A scene run directly from
+# the editor has none and these are no-ops.
+## Returns the flag, false when unset.
+func get_flag(flag: String) -> bool:
+	return GameState.get_level_flag(GameState.get_current_level_path(), flag)
+
+
+## Sets the flag. See [method GameState.set_level_flag].
+func set_flag(flag: String, value: bool = true) -> void:
+	GameState.set_level_flag(GameState.get_current_level_path(), flag, value)
+#endregion
