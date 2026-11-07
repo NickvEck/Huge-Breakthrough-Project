@@ -1,0 +1,270 @@
+{
+	"sections": [
+		{
+			"CaseConversionPolicy": {
+				"None": []
+			}
+		},
+		{
+			"Typespace": {
+				"types": [
+					{
+						"Product": {
+							"elements": [
+								{
+									"name": {
+										"some": "identity"
+									},
+									"algebraic_type": {
+										"Product": {
+											"elements": [
+												{
+													"name": {
+														"some": "__identity__"
+													},
+													"algebraic_type": {
+														"U256": []
+													}
+												}
+											]
+										}
+									}
+								},
+								{
+									"name": {
+										"some": "x"
+									},
+									"algebraic_type": {
+										"F32": []
+									}
+								},
+								{
+									"name": {
+										"some": "y"
+									},
+									"algebraic_type": {
+										"F32": []
+									}
+								},
+								{
+									"name": {
+										"some": "z"
+									},
+									"algebraic_type": {
+										"F32": []
+									}
+								},
+								{
+									"name": {
+										"some": "flip"
+									},
+									"algebraic_type": {
+										"Bool": []
+									}
+								},
+								{
+									"name": {
+										"some": "animation"
+									},
+									"algebraic_type": {
+										"String": []
+									}
+								},
+								{
+									"name": {
+										"some": "level"
+									},
+									"algebraic_type": {
+										"String": []
+									}
+								}
+							]
+						}
+					}
+				]
+			}
+		},
+		{
+			"Types": [
+				{
+					"source_name": {
+						"scope": [],
+						"source_name": "NetPlayer"
+					},
+					"ty": 0.0,
+					"custom_ordering": true
+				}
+			]
+		},
+		{
+			"Tables": [
+				{
+					"source_name": "net_player",
+					"product_type_ref": 0.0,
+					"primary_key": [
+						0.0
+					],
+					"indexes": [
+						{
+							"source_name": {
+								"some": "net_player_identity_idx_btree"
+							},
+							"accessor_name": {
+								"some": "identity"
+							},
+							"algorithm": {
+								"BTree": [
+									0.0
+								]
+							}
+						}
+					],
+					"constraints": [
+						{
+							"source_name": {
+								"some": "net_player_identity_key"
+							},
+							"data": {
+								"Unique": {
+									"columns": [
+										0.0
+									]
+								}
+							}
+						}
+					],
+					"sequences": [],
+					"table_type": {
+						"User": []
+					},
+					"table_access": {
+						"Public": []
+					},
+					"default_values": [],
+					"is_event": false
+				}
+			]
+		},
+		{
+			"Reducers": [
+				{
+					"source_name": "on_disconnect",
+					"params": {
+						"elements": []
+					},
+					"visibility": {
+						"Private": []
+					},
+					"ok_return_type": {
+						"Product": {
+							"elements": []
+						}
+					},
+					"err_return_type": {
+						"String": []
+					}
+				},
+				{
+					"source_name": "update_net_player",
+					"params": {
+						"elements": [
+							{
+								"name": {
+									"some": "x"
+								},
+								"algebraic_type": {
+									"F32": []
+								}
+							},
+							{
+								"name": {
+									"some": "y"
+								},
+								"algebraic_type": {
+									"F32": []
+								}
+							},
+							{
+								"name": {
+									"some": "z"
+								},
+								"algebraic_type": {
+									"F32": []
+								}
+							},
+							{
+								"name": {
+									"some": "flip"
+								},
+								"algebraic_type": {
+									"Bool": []
+								}
+							},
+							{
+								"name": {
+									"some": "animation"
+								},
+								"algebraic_type": {
+									"String": []
+								}
+							},
+							{
+								"name": {
+									"some": "level"
+								},
+								"algebraic_type": {
+									"String": []
+								}
+							}
+						]
+					},
+					"visibility": {
+						"ClientCallable": []
+					},
+					"ok_return_type": {
+						"Product": {
+							"elements": []
+						}
+					},
+					"err_return_type": {
+						"String": []
+					}
+				}
+			]
+		},
+		{
+			"LifeCycleReducers": [
+				{
+					"lifecycle_spec": {
+						"OnDisconnect": []
+					},
+					"function_name": "on_disconnect"
+				}
+			]
+		},
+		{
+			"ExplicitNames": {
+				"entries": [
+					{
+						"Table": {
+							"source_name": "net_player",
+							"canonical_name": "net_player"
+						}
+					},
+					{
+						"Function": {
+							"source_name": "on_disconnect",
+							"canonical_name": "on_disconnect"
+						}
+					},
+					{
+						"Function": {
+							"source_name": "update_net_player",
+							"canonical_name": "update_net_player"
+						}
+					}
+				]
+			}
+		}
+	]
+}

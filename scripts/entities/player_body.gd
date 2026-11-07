@@ -19,6 +19,7 @@ extends CharacterBody3D
 @export var animation: AnimationComponent
 @export var sanity: SanityComponent
 @export var inventory: InventoryComponent
+@export var net_sync: NetSyncComponent
 @export_group("Data")
 @export var movement_profile: MovementProfile
 
@@ -40,6 +41,7 @@ func _wire_components() -> void:
 	animation = _pick(animation, AnimationComponent)
 	sanity = _pick(sanity, SanityComponent)
 	inventory = _pick(inventory, InventoryComponent)
+	net_sync = _pick(net_sync, NetSyncComponent)
 	sprite = _pick(sprite, AnimatedSprite3D)
 	collision_shape = _pick(collision_shape, CollisionShape3D)
 	state_chart = _pick(state_chart, StateChart)
@@ -68,6 +70,9 @@ func _wire_components() -> void:
 		animation.sprite = sprite
 		animation.movement = movement
 		animation.facing = facing
+	if net_sync:
+		net_sync.body = self
+		net_sync.sprite = sprite
 
 
 # The export if set, otherwise the first child of [param type].

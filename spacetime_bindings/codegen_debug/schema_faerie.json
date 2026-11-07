@@ -1,0 +1,113 @@
+{
+	"module": "Faerie",
+	"types": [
+		{
+			"name": "FaerieNetPlayer",
+			"godot_type_hint": "FaerieNetPlayer",
+			"struct": [
+				{
+					"name": "identity",
+					"type": "__identity__",
+					"godot_type_hint": "PackedByteArray"
+				},
+				{
+					"name": "x",
+					"type": "F32",
+					"godot_type_hint": "float"
+				},
+				{
+					"name": "y",
+					"type": "F32",
+					"godot_type_hint": "float"
+				},
+				{
+					"name": "z",
+					"type": "F32",
+					"godot_type_hint": "float"
+				},
+				{
+					"name": "flip",
+					"type": "Bool",
+					"godot_type_hint": "bool"
+				},
+				{
+					"name": "animation",
+					"type": "String",
+					"godot_type_hint": "String"
+				},
+				{
+					"name": "level",
+					"type": "String",
+					"godot_type_hint": "String"
+				}
+			],
+			"table_names": [
+				"net_player"
+			],
+			"table_name": "net_player",
+			"primary_key": 0,
+			"primary_key_name": "identity",
+			"is_public": [
+				true
+			]
+		}
+	],
+	"reducers": [
+		{
+			"name": "update_net_player",
+			"source_name": "update_net_player",
+			"params": [
+				{
+					"name": "x",
+					"type": "F32",
+					"godot_type_hint": "float"
+				},
+				{
+					"name": "y",
+					"type": "F32",
+					"godot_type_hint": "float"
+				},
+				{
+					"name": "z",
+					"type": "F32",
+					"godot_type_hint": "float"
+				},
+				{
+					"name": "flip",
+					"type": "Bool",
+					"godot_type_hint": "bool"
+				},
+				{
+					"name": "animation",
+					"type": "String",
+					"godot_type_hint": "String"
+				},
+				{
+					"name": "level",
+					"type": "String",
+					"godot_type_hint": "String"
+				}
+			],
+			"return_type": {}
+		}
+	],
+	"procedures": [],
+	"tables": [
+		{
+			"name": "faerie_net_player",
+			"type_idx": 0,
+			"primary_key": 0,
+			"primary_key_name": "identity",
+			"unique_indexes": [
+				{
+					"name": "identity",
+					"type": "__identity__",
+					"godot_type_hint": "PackedByteArray",
+					"constraint_name": "net_player_identity_key"
+				}
+			],
+			"is_public": true,
+			"is_event": false
+		}
+	]
+}
