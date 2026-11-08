@@ -1,0 +1,211 @@
+[gd_scene format=3 uid="uid://c8rx0shuqgy5t"]
+
+[ext_resource type="Script" uid="uid://cw6q5ychbnkkb" path="res://scenes/game/levels/level_3.gd" id="1_0hh2y"]
+[ext_resource type="Script" uid="uid://dqdyrkm3jily6" path="res://addons/maaacks_game_template/extras/scripts/capture_mouse.gd" id="2_w28he"]
+[ext_resource type="Script" uid="uid://bx6g1m5t34uod" path="res://scenes/game/scripts/input_display_label.gd" id="3_wy6y4"]
+[ext_resource type="Script" uid="uid://dcfts64u1gjqa" path="res://scenes/game/scripts/tutorial_manager.gd" id="4_lvotd"]
+[ext_resource type="PackedScene" uid="uid://donqi00tgqoon" path="res://scenes/game/tutorials/tutorial_3.tscn" id="5_3m57r"]
+[ext_resource type="PackedScene" uid="uid://c0hf8edi2q1ui" path="res://scenes/game/playertest1.tscn" id="6_8dmei"]
+[ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="7_1hqg1"]
+[ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="8_ofoqe"]
+[ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="9_owpk6"]
+[ext_resource type="Script" uid="uid://dq5r7n4mxqqoa" path="res://scripts/entities/interactable_thing.gd" id="10_0cpib"]
+[ext_resource type="Resource" uid="uid://ds0jpb0tn23s0" path="res://scenes/items/aspect_of_hate.tres" id="11_wn7qk"]
+[ext_resource type="Resource" uid="uid://cetgg5fl75fb4" path="res://The Amazing Art and Sound Folder/test1.dialogue" id="12_rexl1"]
+[ext_resource type="Texture2D" uid="uid://cgdoexuttam65" path="res://The Amazing Art and Sound Folder/archive/cassie_red1.png" id="13_emytf"]
+[ext_resource type="Texture2D" uid="uid://6yeroqsmvbna" path="res://The Amazing Art and Sound Folder/archive/cassie_red2.png" id="14_k2bq4"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qaipj"]
+
+[sub_resource type="Sky" id="Sky_1cqto"]
+sky_material = SubResource("ProceduralSkyMaterial_qaipj")
+
+[sub_resource type="Environment" id="Environment_0gu67"]
+background_mode = 2
+sky = SubResource("Sky_1cqto")
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_tqokf"]
+data = PackedVector3Array(-1.4142137, 0.5, 6.585787, -31.499998, 0.5, -31.499998, 2.3849761e-08, 0.5, 6, -2, 0.5, 8, -31.499998, 0.5, -31.499998, -1.4142137, 0.5, 6.585787, -1.4142135, 0.5, 9.414213, -31.499998, 0.5, -31.499998, -2, 0.5, 8, 2.3849761e-08, 0.5, 6, -31.499998, 0.5, -31.499998, 1.4142133, 0.5, 6.5857863, -31.499998, 0.5, -31.499998, -1.4142135, 0.5, 9.414213, -31.499998, 0.5, 31.500002, 31.5, -0.5, 31.500006, -31.499998, -0.5, -31.499998, -31.499998, -0.5, 31.500002, -8.742278e-08, 0.5, 10, -31.499998, 0.5, 31.500002, -1.4142135, 0.5, 9.414213, 31.5, -0.5, 31.500006, 31.5, -0.5, -31.499994, -31.499998, -0.5, -31.499998, 31.5, 0.5, -31.499994, 31.5, 0.5, 31.500006, -31.499998, 0.5, -31.499998, 1.4142133, 0.5, 6.5857863, -31.499998, 0.5, -31.499998, 31.5, 0.5, 31.500006, 1.4142133, 0.5, 6.5857863, 31.5, 0.5, 31.500006, 2, 0.5, 8, -8.742278e-08, 0.5, 10, 31.5, 0.5, 31.500006, -31.499998, 0.5, 31.500002, -8.742278e-08, 0.5, 10, 1.4142135, 0.5, 9.414213, 31.5, 0.5, 31.500006, 2, 0.5, 8, 31.5, 0.5, 31.500006, 1.4142135, 0.5, 9.414213, -1.4142137, 8, 6.585787, -2, 0.5, 8, -1.4142137, 0.5, 6.585787, 2.3849761e-08, 8, 6, -1.4142137, 0.5, 6.585787, 2.3849761e-08, 0.5, 6, -2, 8, 8, -1.4142135, 0.5, 9.414213, -2, 0.5, 8, -1.4142135, 8, 9.414213, -8.742278e-08, 0.5, 10, -1.4142135, 0.5, 9.414213, -1.4142137, 8, 6.585787, -2, 8, 8, -2, 0.5, 8, -1.4142137, 8, 6.585787, -1.4142137, 0.5, 6.585787, 2.3849761e-08, 8, 6, -2, 8, 8, -1.4142135, 8, 9.414213, -1.4142135, 0.5, 9.414213, -1.4142135, 8, 9.414213, -8.742278e-08, 8, 10, -8.742278e-08, 0.5, 10, -1.4142137, 8, 6.585787, 0, 8, 8, -2, 8, 8, -1.4142137, 8, 6.585787, 2.3849761e-08, 8, 6, 0, 8, 8, -2, 8, 8, 0, 8, 8, -1.4142135, 8, 9.414213, -1.4142135, 8, 9.414213, 0, 8, 8, -8.742278e-08, 8, 10, 1.4142133, 8, 6.5857863, 2.3849761e-08, 0.5, 6, 1.4142133, 0.5, 6.5857863, 2, 8, 8, 1.4142133, 0.5, 6.5857863, 2, 0.5, 8, -8.742278e-08, 8, 10, 1.4142135, 0.5, 9.414213, -8.742278e-08, 0.5, 10, 1.4142135, 8, 9.414213, 2, 0.5, 8, 1.4142135, 0.5, 9.414213, 2.3849761e-08, 8, 6, 2.3849761e-08, 0.5, 6, 1.4142133, 8, 6.5857863, 1.4142133, 8, 6.5857863, 1.4142133, 0.5, 6.5857863, 2, 8, 8, -8.742278e-08, 8, 10, 1.4142135, 8, 9.414213, 1.4142135, 0.5, 9.414213, 2, 8, 8, 2, 0.5, 8, 1.4142135, 8, 9.414213, 2.3849761e-08, 8, 6, 1.4142133, 8, 6.5857863, 0, 8, 8, 0, 8, 8, 1.4142133, 8, 6.5857863, 2, 8, 8, -8.742278e-08, 8, 10, 0, 8, 8, 1.4142135, 8, 9.414213, 0, 8, 8, 2, 8, 8, 1.4142135, 8, 9.414213, -32.5, -0.5, -32, -32.5, -0.5, 32, -32, -0.5, -32, -32, -0.5, -32, -32.5, -0.5, 32, -31.499998, -0.5, -32, -31.499998, -0.5, -32, -32.5, -0.5, 32, -31.499998, -0.5, -31.499998, -32.5, -0.5, -32, -32, -0.5, -32, -32.5, 8.5, -32, -32.5, -0.5, -32, -32.5, 8.5, -32, -32.5, -0.5, 32, -31.499998, -0.5, -31.499998, -32.5, -0.5, 32, -31.499998, -0.5, 31.500002, -32.5, -0.5, 32, -32, -0.5, 32, -31.499998, -0.5, 31.500002, -32, -0.5, 32, -31.499998, -0.5, 32, -31.499998, -0.5, 31.500002, -31.499998, 8.5, 31.500002, -31.499998, 0.5, -31.499998, -31.499998, 0.5, 31.500002, -32.5, -0.5, 32, -32, 8.5, 32, -32, -0.5, 32, -32, -0.5, -32, -32, 8.5, -32, -32.5, 8.5, -32, -31.499998, 8.5, -31.499998, -31.499998, 0.5, -31.499998, -31.499998, 8.5, 31.500002, -32, 8.5, -32, -31.499998, 8.5, -32, -31.499998, 8.5, -31.499998, -32.5, 8.5, -32, -32, 8.5, -32, -31.499998, 8.5, 32, -32, 8.5, -32, -31.499998, 8.5, -31.499998, -31.499998, 8.5, 31.500002, -32.5, -0.5, 32, -32.5, 8.5, -32, -32.5, 8.5, 32, -32.5, -0.5, 32, -32.5, 8.5, 32, -32, 8.5, 32, -32.5, 8.5, -32, -32, 8.5, 32, -32.5, 8.5, 32, -32.5, 8.5, -32, -31.499998, 8.5, 32, -32, 8.5, 32, -32, 8.5, -32, -31.499998, 8.5, 31.500002, -31.499998, 8.5, 32, 31.5, -0.5, -32, 31.5, -0.5, -31.499994, 32, -0.5, -32, 31.5, -0.5, -31.499994, 31.5, -0.5, 31.500006, 32, -0.5, -32, 32, -0.5, -32, 31.5, -0.5, 32, 32.5, -0.5, -32, 32, -0.5, -32, 32.5, -0.5, -32, 32, 8.5, -32, 31.5, 8.5, -31.499994, 31.5, 0.5, 31.500006, 31.5, 0.5, -31.499994, 32, -0.5, -32, 31.5, -0.5, 31.500006, 31.5, -0.5, 32, 32.5, -0.5, -32, 31.5, -0.5, 32, 32, -0.5, 32, 32.5, -0.5, -32, 32, -0.5, 32, 32.5, -0.5, 32, 32.5, -0.5, -32, 32.5, -0.5, 32, 32.5, 8.5, 32, 32, -0.5, 32, 32.5, 8.5, 32, 32.5, -0.5, 32, 32.5, -0.5, -32, 32.5, 8.5, -32, 32, 8.5, -32, 32.5, -0.5, -32, 32.5, 8.5, 32, 32.5, 8.5, -32, 31.5, 8.5, -32, 32.5, 8.5, 32, 31.5, 8.5, -31.499994, 31.5, 8.5, -32, 32, 8.5, -32, 32.5, 8.5, 32, 32, 8.5, -32, 32.5, 8.5, -32, 32.5, 8.5, 32, 31.5, 8.5, -31.499994, 31.5, 8.5, 31.500006, 31.5, 0.5, 31.500006, 32, -0.5, 32, 32, 8.5, 32, 32.5, 8.5, 32, 31.5, 8.5, -31.499994, 32.5, 8.5, 32, 31.5, 8.5, 31.500006, 31.5, 8.5, 31.500006, 32, 8.5, 32, 31.5, 8.5, 32, 31.5, 8.5, 31.500006, 32.5, 8.5, 32, 32, 8.5, 32, -32, -0.5, -32.499996, -32, -0.5, -32, -31.499998, -0.5, -32, -32, -0.5, -32.499996, -32, 8.5, -32.499996, -32, -0.5, -32, -32, -0.5, -32.499996, -31.499998, -0.5, -32, 31.5, -0.5, -32, -31.499998, -0.5, -32, -31.499998, -0.5, -31.499998, 31.5, -0.5, -32, -31.499998, 8.5, -31.499998, 31.5, 0.5, -31.499994, -31.499998, 0.5, -31.499998, -32, -0.5, -32, -32, 8.5, -32.499996, -32, 8.5, -32, -32, 8.5, -32.499996, -31.499998, 8.5, -32, -32, 8.5, -32, -32, -0.5, -32.499996, 32, 8.5, -32.499996, -32, 8.5, -32.499996, -32, 8.5, -32.499996, 32, 8.5, -32.499996, -31.499998, 8.5, -32, -31.499998, 8.5, -32, 31.5, 8.5, -31.499994, -31.499998, 8.5, -31.499998, -32, -0.5, -32.499996, 31.5, -0.5, -32, 32, -0.5, -32.499996, -31.499998, -0.5, -31.499998, 31.5, -0.5, -31.499994, 31.5, -0.5, -32, -32, -0.5, -32.499996, 32, -0.5, -32.499996, 32, 8.5, -32.499996, 31.5, -0.5, -32, 32, -0.5, -32, 32, -0.5, -32.499996, 32, -0.5, -32.499996, 32, -0.5, -32, 32, 8.5, -32, -31.499998, 8.5, -31.499998, 31.5, 8.5, -31.499994, 31.5, 0.5, -31.499994, -31.499998, 8.5, -32, 31.5, 8.5, -32, 31.5, 8.5, -31.499994, -31.499998, 8.5, -32, 32, 8.5, -32.499996, 31.5, 8.5, -32, 32, -0.5, -32.499996, 32, 8.5, -32, 32, 8.5, -32.499996, 31.5, 8.5, -32, 32, 8.5, -32.499996, 32, 8.5, -32, -32, -0.5, 32, -32, -0.5, 32.500004, -31.499998, -0.5, 32, -32, -0.5, 32, -32, 8.5, 32, -32, -0.5, 32.500004, -31.499998, -0.5, 31.500002, -31.499998, -0.5, 32, 31.5, -0.5, 31.500006, -32, -0.5, 32.500004, 32, -0.5, 32.500004, -31.499998, -0.5, 32, -32, -0.5, 32.500004, -32, 8.5, 32.500004, 32, -0.5, 32.500004, -32, -0.5, 32.500004, -32, 8.5, 32, -32, 8.5, 32.500004, -32, 8.5, 32, -31.499998, 8.5, 32, -32, 8.5, 32.500004, -31.499998, 8.5, 31.500002, -31.499998, 0.5, 31.500002, 31.5, 8.5, 31.500006, -32, 8.5, 32.500004, -31.499998, 8.5, 32, 31.5, 8.5, 32, -31.499998, 8.5, 31.500002, 31.5, 8.5, 32, -31.499998, 8.5, 32, -31.499998, -0.5, 32, 31.5, -0.5, 32, 31.5, -0.5, 31.500006, -31.499998, -0.5, 32, 32, -0.5, 32.500004, 31.5, -0.5, 32, 31.5, 8.5, 31.500006, -31.499998, 0.5, 31.500002, 31.5, 0.5, 31.500006, 31.5, -0.5, 32, 32, -0.5, 32.500004, 32, -0.5, 32, 32, -0.5, 32, 32, -0.5, 32.500004, 32, 8.5, 32.500004, -32, 8.5, 32.500004, 32, 8.5, 32.500004, 32, -0.5, 32.500004, -31.499998, 8.5, 31.500002, 31.5, 8.5, 31.500006, 31.5, 8.5, 32, -32, 8.5, 32.500004, 31.5, 8.5, 32, 32, 8.5, 32.500004, 32, -0.5, 32, 32, 8.5, 32.500004, 32, 8.5, 32, 31.5, 8.5, 32, 32, 8.5, 32, 32, 8.5, 32.500004)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0gu67"]
+size = Vector3(32, 8, 16)
+
+[sub_resource type="Resource" id="Resource_tqokf"]
+script = ExtResource("9_owpk6")
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_q1sf4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("13_emytf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_k2bq4")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 2.0
+}]
+
+[node name="2_5D test Dean" type="Node3D" unique_id=808041491]
+script = ExtResource("1_0hh2y")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2076466247]
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer" unique_id=1139802558]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+script = ExtResource("2_w28he")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer" unique_id=24784916]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer" unique_id=1118917856]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Dean 2.5 D test"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/MarginContainer/VBoxContainer" unique_id=1867660130]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="CanvasLayer/MarginContainer/VBoxContainer" unique_id=1744100605]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/MarginContainer/VBoxContainer" unique_id=1147500718]
+layout_mode = 2
+
+[node name="TutorialButton" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=90402611]
+layout_mode = 2
+text = "Tutorial"
+
+[node name="InputDisplayLabel" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1335603973]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+script = ExtResource("3_wy6y4")
+
+[node name="TutorialManager" type="Node" parent="." unique_id=18876677]
+unique_name_in_owner = true
+script = ExtResource("4_lvotd")
+tutorial_scenes = Array[PackedScene]([ExtResource("5_3m57r")])
+
+[node name="World" type="Node3D" parent="." unique_id=1529055841]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World" unique_id=205547843]
+environment = SubResource("Environment_0gu67")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World" unique_id=1788996009]
+transform = Transform3D(0.8660254, 0.35355347, -0.35355347, 0, 0.7071068, 0.7071068, 0.50000006, -0.61237246, 0.61237246, 0, 0, 0)
+shadow_enabled = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="World" unique_id=2092568780]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/StaticBody3D" unique_id=1088308243]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2002654, 0, -21)
+size = Vector3(64, 1, 64)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/StaticBody3D/CSGBox3D" unique_id=1700219779]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 8)
+radius = 2.0
+height = 8.0
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/StaticBody3D/CSGBox3D" unique_id=927637598]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.999998, 4, 0)
+size = Vector3(1, 9, 64)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="World/StaticBody3D/CSGBox3D" unique_id=134137073]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 4, 0)
+size = Vector3(1, 9, 64)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="World/StaticBody3D/CSGBox3D" unique_id=626816702]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.003546e-07, 4, -31.999996)
+size = Vector3(1, 9, 64)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="World/StaticBody3D/CSGBox3D" unique_id=1937106653]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -7.003546e-07, 4, 32.000004)
+size = Vector3(1, 9, 64)
+
+[node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="World/StaticBody3D" unique_id=1798388754]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2002654, 0, -21)
+shape = SubResource("ConcavePolygonShape3D_tqokf")
+
+[node name="WinArea3D" type="Area3D" parent="World" unique_id=951327815]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 6, -20)
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/WinArea3D" unique_id=116265185]
+shape = SubResource("BoxShape3D_0gu67")
+
+[node name="Label3D" type="Label3D" parent="World/WinArea3D" unique_id=1217239411]
+pixel_size = 0.1
+text = "Enter
+To FORGET THE END"
+font_size = 24
+
+[node name="LoseArea3D" type="Area3D" parent="World" unique_id=1792313799]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 6, -20)
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/LoseArea3D" unique_id=1030523366]
+shape = SubResource("BoxShape3D_0gu67")
+
+[node name="Label3D" type="Label3D" parent="World/LoseArea3D" unique_id=2067115818]
+pixel_size = 0.1
+text = "Enter
+To Lose"
+
+[node name="CharacterBody3D" parent="World" unique_id=542873658 instance=ExtResource("6_8dmei")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=272565510]
+physics_interpolation_mode = 1
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 3)
+top_level = true
+
+[node name="PhantomCameraHost" type="Node" parent="Camera3D" unique_id=1195100836]
+process_priority = 300
+process_physics_priority = 300
+script = ExtResource("7_1hqg1")
+
+[node name="PhantomCamera3D" type="Node3D" parent="." unique_id=257748013 node_paths=PackedStringArray("follow_target")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 3)
+script = ExtResource("8_ofoqe")
+follow_mode = 6
+follow_target = NodePath("../World/CharacterBody3D")
+tween_resource = SubResource("Resource_tqokf")
+follow_distance = 3.0
+spring_length = 3.0
+align_transform_with_view = Callable()
+align_position_with_view = Callable()
+align_rotation_with_view = Callable()
+
+[node name="InteractableThing" type="Node3D" parent="." unique_id=1601618768 node_paths=PackedStringArray("sprite")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.038578, 2.8417342, 0)
+script = ExtResource("10_0cpib")
+sprite = NodePath("AnimatedSprite3D")
+item = ExtResource("11_wn7qk")
+dialogue = ExtResource("12_rexl1")
+metadata/_custom_type_script = "uid://dq5r7n4mxqqoa"
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="InteractableThing" unique_id=63616522]
+pixel_size = 0.1
+sprite_frames = SubResource("SpriteFrames_q1sf4")
+autoplay = "default"
+
+[connection signal="pressed" from="CanvasLayer/MarginContainer/VBoxContainer/HBoxContainer2/TutorialButton" to="." method="_on_tutorial_button_pressed"]
+[connection signal="body_entered" from="World/WinArea3D" to="." method="_on_win_area_3d_body_entered"]
+[connection signal="body_entered" from="World/LoseArea3D" to="." method="_on_lose_area_3d_body_entered"]
