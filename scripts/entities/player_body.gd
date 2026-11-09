@@ -1,15 +1,26 @@
+@tool
 # SPDX-FileCopyrightText: 2026 Dean Henny Anton Lemans <deanlemans@mailbox.org>
 # SPDX-License-Identifier: EUPL-1.2
 ## Owns every component on the player [CharacterBody3D] and wires their dependencies
 ## in [method Node._enter_tree]. This is the only wiring site, components never look up
 ## their siblings themselves.
 ##
-## Exports win over auto-resolution: a component or node dragged into an inspector slot
-## is used, otherwise the body finds the first child of that type.
+## The slots are filled in the editor with [member fill_exports] and saved in the scene,
+## nothing is searched at runtime. An empty slot means the component is absent.
+## A component that is in the scene but not in a slot gets no dependencies and reports
+## that itself in [method Component._on_setup].
 ## [MovementProfile] is a [Resource] and cannot be found in the tree, so a fresh
 ## instance is used when none is exported.
+## @note: This is a [code]@tool[/code] script only for [member fill_exports]. Wiring
+## is skipped in the editor, see [method _enter_tree].
 class_name PlayerBody
 extends CharacterBody3D
+
+## Editor only. Tick it to fill every empty slot below from the children. It resets itself.
+@export var DEAN_fill_components: bool:
+	set(value):
+		if value and Engine.is_editor_hint():
+			_fill_exports()
 
 @export_group("Components")
 @export var input: InputComponent
@@ -30,10 +41,13 @@ extends CharacterBody3D
 
 
 func _enter_tree() -> void:
+	# Wiring mutates components, which are placeholders in the editor.
+	if Engine.is_editor_hint():
+		return
 	_wire_components()
 
 
-func _wire_components() -> void:
+func _fill_exports() -> void:
 	input = _pick(input, InputComponent)
 	facing = _pick(facing, FacingComponent)
 	movement = _pick(movement, Movement3DComponent)
@@ -45,7 +59,11 @@ func _wire_components() -> void:
 	sprite = _pick(sprite, AnimatedSprite3D)
 	collision_shape = _pick(collision_shape, CollisionShape3D)
 	state_chart = _pick(state_chart, StateChart)
+	# Looked up by name, a direct EditorInterface reference fails to parse in exported builds.
+	Engine.get_singleton(&"EditorInterface").mark_scene_as_unsaved()
 
+
+func _wire_components() -> void:
 	if not movement_profile:
 		movement_profile = MovementProfile.new()
 
@@ -75,7 +93,7 @@ func _wire_components() -> void:
 		net_sync.sprite = sprite
 
 
-# The export if set, otherwise the first child of [param type].
+# Editor only, the export if set, otherwise the first child of [param type].
 func _pick(current: Node, type: Variant) -> Node:
 	return current if current else Component.find_component(self, type)
 

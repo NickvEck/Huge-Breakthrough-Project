@@ -911,15 +911,19 @@ animations = [{
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0gu67"]
 
-[node name="CharacterBody3D" type="CharacterBody3D" unique_id=542873658 node_paths=PackedStringArray("input", "facing", "movement", "interaction", "animation", "sprite", "collision_shape", "state_chart")]
+[node name="CharacterBody3D" type="CharacterBody3D" unique_id=542873658 node_paths=PackedStringArray("input", "facing", "movement", "interaction", "animation", "sanity", "inventory", "net_sync", "sprite", "collision_shape", "state_chart")]
 collision_layer = 3
 collision_mask = 3
 script = ExtResource("1_ff7hd")
+DEAN_fill_component = null
 input = NodePath("PlayerInputComponent")
 facing = NodePath("FacingComponent")
 movement = NodePath("Movement3DComponent")
 interaction = NodePath("InteractionComponent")
 animation = NodePath("AnimationComponent")
+sanity = NodePath("SanityComponent")
+inventory = NodePath("InventoryComponent")
+net_sync = NodePath("NetSyncComponent")
 movement_profile = SubResource("Resource_tqokf")
 sprite = NodePath("AnimatedSprite3D")
 collision_shape = NodePath("CollisionShape3D")
