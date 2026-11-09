@@ -67,21 +67,21 @@ func _ready() -> void:
 
 
 ## Runs the interaction for [param by] and returns when it ends.
-## [param by] needs an [InventoryComponent] if [member item] or [member requires_item] is set.
+## [param by] is duck typed. It needs [code]get_flag[/code] if [member requires_flag] is set,
+## [code]has_item[/code] if [member requires_item] is set and [code]give_item[/code] if
+## [member item] is set, see the dialogue API of [PlayerBody].
 func run(by: Node) -> void:
 	if not enabled or _running:
 		return
-	var player := by as PlayerBody
-	if (item or requires_item) and not (player and player.inventory):
-		push_error("%s: item/requires_item set but %s has no inventory" % [name, by.name])
+	if not _has_api(by):
 		return
-	if requires_flag != "" and not (player and player.get_flag(requires_flag)):
+	if requires_flag != "" and not by.get_flag(requires_flag):
 		await _block(by, &"requires_flag")
 		return
-	if requires_item and not player.inventory.has(requires_item):
+	if requires_item and not by.has_item(requires_item.id()):
 		await _block(by, &"requires")
 		return
-	if item and not player.inventory.add(item, item_count):
+	if item and not by.give_item(item.id(), item_count):
 		await _block(by, &"full")
 		return
 	_running = true
@@ -95,6 +95,22 @@ func run(by: Node) -> void:
 		if persistent_id != "":
 			GameState.set_level_flag(_level_path(), _done_key())
 		queue_free()
+
+
+# Only the methods this thing actually calls are required of [param by].
+func _has_api(by: Node) -> bool:
+	var needed: Array[StringName] = []
+	if requires_flag != "":
+		needed.append(&"get_flag")
+	if requires_item:
+		needed.append(&"has_item")
+	if item:
+		needed.append(&"give_item")
+	for method: StringName in needed:
+		if not by.has_method(method):
+			push_error("%s: %s has no %s()" % [name, by.name, method])
+			return false
+	return true
 
 
 func _block(by: Node, reason: StringName) -> void:
