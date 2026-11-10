@@ -8,7 +8,7 @@ const STATE_NAME: String = "GameState"
 const FILE_PATH = "res://scripts/game_state.gd"
 
 ## Level scene path or uid to [LevelState].
-@export var level_states: Dictionary = { }
+@export var level_states: Dictionary[String, LevelState] = { }
 @export var current_level_path: String
 @export var checkpoint_level_path: String
 @export var total_games_played: int
@@ -91,7 +91,7 @@ static func continue_game() -> void:
 ## Wipes level progress and play time. [member total_games_played] is kept.
 static func reset() -> void:
 	var game_state := get_or_create_state()
-	game_state.level_states = { }
+	game_state.level_states.clear()
 	game_state.current_level_path = ""
 	game_state.checkpoint_level_path = ""
 	game_state.play_time = 0

@@ -27,8 +27,9 @@ var body: Node3D
 var is_locked: bool = false
 
 var _busy: bool = false
-# Instance ids of auto things the player is currently standing in.
-var _auto_inside: Array[int] = []
+# Instance ids of auto things the player is standing in. The values are unused,
+# a Dictionary gives constant time has and erase.
+var _auto_inside: Dictionary[int, bool] = { }
 
 
 func _physics_process(_delta: float) -> void:
@@ -58,8 +59,8 @@ func _interact() -> void:
 		_set_locked(true)
 		state_chart.send_event(StateEvents.INTERACT)
 	await target.run(body)
-	# The press that closed the dialogue still reads as just pressed for a physics
-	# frame or two. Wait it out so it does not restart the interaction.
+	# The press that closed the dialogue can still be latched as a press. Wait it
+	# out so it does not restart the interaction.
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	if locks:
@@ -92,7 +93,7 @@ func _check_auto() -> void:
 		var id: int = thing.get_instance_id()
 		var inside: bool = origin.distance_squared_to(thing.global_position) <= thing.auto_radius * thing.auto_radius
 		if inside and not _auto_inside.has(id):
-			_auto_inside.append(id)
+			_auto_inside[id] = true
 			# Not awaited, auto things never lock.
 			thing.run(body)
 		elif not inside:

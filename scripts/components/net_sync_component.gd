@@ -11,17 +11,18 @@ extends Component
 var body: Node3D
 var sprite: AnimatedSprite3D
 
-var _timer: float = 0.0
-
-
-func _physics_process(delta: float) -> void:
-	_timer -= delta
-	if _timer > 0.0:
-		return
-	_timer = send_interval
-	Net.send_state(body.global_position, sprite.flip_h, sprite.animation)
-
 
 func _on_setup() -> void:
 	if not _require({ "body": body, "sprite": sprite }):
-		set_physics_process(false)
+		return
+	var timer := Timer.new()
+	timer.wait_time = send_interval
+	# Sampled in the physics step, where the body has moved.
+	timer.process_callback = Timer.TIMER_PROCESS_PHYSICS
+	timer.autostart = true
+	timer.timeout.connect(_send)
+	add_child(timer)
+
+
+func _send() -> void:
+	Net.send_state(body.global_position, sprite.flip_h, sprite.animation)

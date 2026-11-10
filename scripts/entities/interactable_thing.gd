@@ -8,12 +8,15 @@
 class_name InteractableThing
 extends Node3D
 
-## Emitted when blocked. [param reason] is [code]&"requires"[/code],
-## [code]&"requires_flag"[/code] or [code]&"full"[/code].
+## Emitted when blocked. [param reason] is [constant REQUIRES_ITEM], [constant REQUIRES_FLAG]
+## or [constant FULL].
 signal blocked(by: Node, reason: StringName)
 
 ## Group every thing joins. [InteractionComponent] scans it.
 const GROUP: StringName = &"interactable"
+const REQUIRES_ITEM: StringName = &"requires_item"
+const REQUIRES_FLAG: StringName = &"requires_flag"
+const FULL: StringName = &"full"
 
 @export var enabled: bool = true
 ## Plays [member sprite] on interact, paused otherwise.
@@ -76,13 +79,13 @@ func run(by: Node) -> void:
 	if not _has_api(by):
 		return
 	if requires_flag != "" and not by.get_flag(requires_flag):
-		await _block(by, &"requires_flag")
+		await _block(by, REQUIRES_FLAG)
 		return
 	if requires_item and not by.has_item(requires_item.id()):
-		await _block(by, &"requires")
+		await _block(by, REQUIRES_ITEM)
 		return
 	if item and not by.give_item(item.id(), item_count):
-		await _block(by, &"full")
+		await _block(by, FULL)
 		return
 	_running = true
 	if animate_on_interact and sprite:
