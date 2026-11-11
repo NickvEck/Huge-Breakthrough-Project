@@ -10,13 +10,14 @@ extends Node
 
 const HOST: String = "https://maincloud.spacetimedb.com"
 const MODULE_NAME: String = "faerie"
-#const REMOTE_SCENE: PackedScene = preload("res://scenes/remote_player.tscn")
 const REMOTE_SCENE: PackedScene = preload("res://scenes/game/remote_playertest1.tscn")
 
 # The generated module client. Untyped because codegen makes the class, and the only place that names it.
 var _module
 # Keyed by hex identity, a PackedByteArray is a poor dictionary key.
 var _remotes: Dictionary[String, RemotePlayer] = { }
+# Released remotes, hidden and disabled until the next join.
+var _pool: Array[RemotePlayer] = []
 
 
 func _ready() -> void:
@@ -58,9 +59,8 @@ func _on_connected(_identity: PackedByteArray, _token: String) -> void:
 
 func _on_disconnected() -> void:
 	push_warning("net: disconnected.")
-	for remote: RemotePlayer in _remotes.values():
-		remote.queue_free()
-	_remotes.clear()
+	for id: String in _remotes.keys():
+		_release(id)
 
 
 func _on_connection_error(code: int, reason: String) -> void:
@@ -90,22 +90,41 @@ func _on_updated(_previous: FaerieNetPlayer, row: FaerieNetPlayer) -> void:
 func _on_deleted(row: FaerieNetPlayer) -> void:
 	var id: String = row.identity.hex_encode()
 	if _remotes.has(id):
-		_remotes[id].queue_free()
-		_remotes.erase(id)
+		_release(id)
 
 
-# Insert and update are the same thing here: create the remote if missing, then apply.
+# Insert and update are the same thing here: take a remote if missing, then apply.
 func _apply(row: FaerieNetPlayer) -> void:
 	if row.identity == _module.get_local_identity():
 		return
 	var id: String = row.identity.hex_encode()
 	var remote: RemotePlayer = _remotes.get(id)
 	if not remote:
-		remote = REMOTE_SCENE.instantiate() as RemotePlayer
+		remote = _acquire()
 		if not remote:
-			push_error("net: %s root is not a RemotePlayer" % REMOTE_SCENE.resource_path)
 			return
-		add_child(remote)
 		_remotes[id] = remote
 	remote.apply(row)
 	remote.visible = row.level == GameState.get_current_level_path()
+
+
+func _acquire() -> RemotePlayer:
+	if not _pool.is_empty():
+		var pooled: RemotePlayer = _pool.pop_back()
+		pooled.process_mode = Node.PROCESS_MODE_INHERIT
+		pooled.reset()
+		return pooled
+	var remote := REMOTE_SCENE.instantiate() as RemotePlayer
+	if not remote:
+		push_error("net: %s root is not a RemotePlayer" % REMOTE_SCENE.resource_path)
+		return null
+	add_child(remote)
+	return remote
+
+
+func _release(id: String) -> void:
+	var remote: RemotePlayer = _remotes[id]
+	_remotes.erase(id)
+	remote.visible = false
+	remote.process_mode = Node.PROCESS_MODE_DISABLED
+	_pool.append(remote)

@@ -22,6 +22,11 @@ func _process(delta: float) -> void:
 	global_position = global_position.lerp(_target, 1.0 - exp(-delta / smoothing))
 
 
+## Forgets the old position, so a pooled remote snaps to its next row.
+func reset() -> void:
+	_placed = false
+
+
 ## Applies the latest row. The first call snaps to the position instead of easing from the origin.
 func apply(row: FaerieNetPlayer) -> void:
 	_target = Vector3(row.x, row.y, row.z)
