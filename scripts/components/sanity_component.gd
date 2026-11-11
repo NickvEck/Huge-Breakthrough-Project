@@ -63,7 +63,8 @@ func unpause() -> void:
 
 func set_value(new_value: float) -> void:
 	new_value = clampf(new_value, 0.0, max_sanity)
-	if is_equal_approx(new_value, value):
+	# Exact on purpose: is_equal_approx scales with the value and swallows a slow drain.
+	if new_value == value:
 		return
 	value = new_value
 	changed.emit(value, get_ratio())

@@ -12,6 +12,8 @@ extends Node3D
 var _sprite: AnimatedSprite3D
 var _target: Vector3
 var _placed: bool = false
+# Last animation reported missing. The row repeats every update, so it is logged once.
+var _missing_animation: String = ""
 
 
 func _ready() -> void:
@@ -37,6 +39,8 @@ func apply(row: FaerieNetPlayer) -> void:
 	if _sprite.animation == row.animation:
 		return
 	if not _sprite.sprite_frames.has_animation(row.animation):
-		push_error("%s: no animation '%s'" % [name, row.animation])
+		if row.animation != _missing_animation:
+			_missing_animation = row.animation
+			push_error("%s: no animation '%s'" % [name, row.animation])
 		return
 	_sprite.play(row.animation)

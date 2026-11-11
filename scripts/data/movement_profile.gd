@@ -31,17 +31,18 @@ extends Resource
 @export_range(0.0, 3.0, 0.05) var momentum_jump_distance_multiplier: float = 1.5
 
 @export_group("Fall")
-@export var max_fall_speed: float = 600.0
+@export var max_fall_speed: float = 30.0
 ## Added to world gravity while falling.
 @export var fall_gravity_offset: float = 0.0
 ## Hang time applies while vertical speed is below this.
-@export var apex_hang_threshold: float = 40.0
+## Keep it well under the jump launch speed (about 10 for the default jump), or it covers the whole jump.
+@export var apex_hang_threshold: float = 2.0
 @export_range(0.0, 1.0, 0.05) var apex_hang_gravity_multiplier: float = 0.5
 
 @export_group("Wall")
 @export var wall_jump_enabled: bool = true
-@export var wall_slide_speed: float = 100.0
-@export var wall_jump_push_speed: float = 300.0
+@export var wall_slide_speed: float = 3.0
+@export var wall_jump_push_speed: float = 12.0
 ## Horizontal input is ignored for this long after a wall jump.
 @export_range(0.0, 1.0, 0.01) var wall_jump_lock_duration: float = 0.1
 
@@ -56,5 +57,6 @@ extends Resource
 ## Collision shape y scale while crouched.
 @export_range(0.0, 1.0, 0.01) var crouch_collision_scale: float = 0.5
 ## Collision shape y offset while crouched, compensates the scale.
-@export var crouch_shape_y_offset: float = 8.0
+## -0.5 keeps the feet down for the default 2 unit capsule at 0.5 scale.
+@export var crouch_shape_y_offset: float = -0.5
 @export_range(0.0, 1.0, 0.05) var crouch_speed_multiplier: float = 0.5

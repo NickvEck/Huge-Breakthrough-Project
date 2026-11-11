@@ -98,6 +98,10 @@ func _check_auto() -> void:
 			thing.run(body)
 		elif not inside:
 			_auto_inside.erase(id)
+	# Freed things (pickups) leave the group while their id is still in here.
+	for id: int in _auto_inside.keys():
+		if not is_instance_id_valid(id):
+			_auto_inside.erase(id)
 #endregion
 
 

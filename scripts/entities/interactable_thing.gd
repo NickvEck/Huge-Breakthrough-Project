@@ -133,5 +133,12 @@ func _done_key() -> String:
 
 # Scene path of the level this was placed in. Falls back to the current level
 # when there is no owner (added from code).
+# The topmost owner, not the direct one: inside an instanced prefab the direct
+# owner is the prefab root, which would share the flag across every level.
 func _level_path() -> String:
-	return owner.scene_file_path if owner else GameState.get_current_level_path()
+	if not owner:
+		return GameState.get_current_level_path()
+	var level: Node = owner
+	while level.owner:
+		level = level.owner
+	return level.scene_file_path

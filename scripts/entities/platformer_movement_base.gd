@@ -354,6 +354,10 @@ func _on_air_physics(delta: float) -> void:
 		_was_falling = false
 
 	_coyote_timer -= delta
+	# Walking off a ledge spends the ground jump once the grace time is over,
+	# otherwise every air jump is still available.
+	if _coyote_timer <= 0.0 and _jumps_used == 0:
+		_jumps_used = 1
 	_update_jump_buffer(delta)
 
 	if _frame().jump_released and vertical > 0.0:
