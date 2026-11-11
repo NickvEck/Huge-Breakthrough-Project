@@ -13,7 +13,7 @@ signal add_failed(item: ItemData)
 
 @export var max_slots: int = 8
 ## Prints inventory changes. Testing only.
-@export var debug: bool = false
+@export var debug: bool = true
 
 var sanity: SanityComponent
 var body: Node
