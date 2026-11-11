@@ -1,9 +1,0 @@
-/home/void/repositories/Huge-Breakthrough-Project/server/target/debug/deps/spacetimedb_primitives-fc7143de32cb4a42.d: /home/void/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spacetimedb-primitives-2.14.1/src/lib.rs /home/void/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spacetimedb-primitives-2.14.1/src/attr.rs /home/void/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spacetimedb-primitives-2.14.1/src/col_list.rs /home/void/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spacetimedb-primitives-2.14.1/src/errno.rs /home/void/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spacetimedb-primitives-2.14.1/src/ids.rs
-
-/home/void/repositories/Huge-Breakthrough-Project/server/target/debug/deps/libspacetimedb_primitives-fc7143de32cb4a42.rmeta: /home/void/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spacetimedb-primitives-2.14.1/src/lib.rs /home/void/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spacetimedb-primitives-2.14.1/src/attr.rs /home/void/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spacetimedb-primitives-2.14.1/src/col_list.rs /home/void/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spacetimedb-primitives-2.14.1/src/errno.rs /home/void/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spacetimedb-primitives-2.14.1/src/ids.rs
-
-/home/void/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spacetimedb-primitives-2.14.1/src/lib.rs:
-/home/void/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spacetimedb-primitives-2.14.1/src/attr.rs:
-/home/void/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spacetimedb-primitives-2.14.1/src/col_list.rs:
-/home/void/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spacetimedb-primitives-2.14.1/src/errno.rs:
-/home/void/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spacetimedb-primitives-2.14.1/src/ids.rs:

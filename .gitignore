@@ -25,3 +25,6 @@ mono_crash.*.json
 /scripts/allscripts1.md
 /scripts/all_scripts.gd
 /scripts/all_scripts.gd.uid
+
+# Rust build output
+server/target/
